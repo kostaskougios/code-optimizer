@@ -16,7 +16,6 @@ class FilterMapOptimizer extends PluginPhase:
 
   override val phaseName: String      = "filterMapOptimizer"
   override val runsAfter: Set[String] = Set("typer")
-  println("*** Optimizer loaded.")
 
   override def transformApply(tree: Apply)(using Context): Tree =
     tree match
@@ -37,19 +36,17 @@ class FilterMapOptimizer extends PluginPhase:
         val pos        = tree.span
         val sourceFile = ctx.source.file.name
         val lineNumber = ctx.source.offsetToLine(pos.start) + 1
-        println(s"[FilterMapOptimizer] Found filter→forall at $sourceFile:$lineNumber , element type ${elementType.show}")
+        println(s"[${getClass.getSimpleName}] Optimizing filter→forall at $sourceFile:$lineNumber")
 
         val listOpsSym      = requiredModule("codeoptimizer.ListOps")
         val filterForallSym = listOpsSym.info.decl(termName("filterForall"))
 
-        val a = Apply(
+        Apply(
           TypeApply(
             Select(ref(listOpsSym), filterForallSym.name),
             List(TypeTree(elementType))
           ),
           List(pred, forallPred, seqExpr)
         ).withSpan(tree.span)
-        println(a.show)
-        a
       case _ =>
         tree
