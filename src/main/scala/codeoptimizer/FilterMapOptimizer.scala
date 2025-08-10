@@ -1,5 +1,6 @@
 package codeoptimizer
 
+import codeoptimizer.Utils.elementFirstType
 import dotty.tools.dotc.*
 import dotty.tools.dotc.ast.tpd.*
 import dotty.tools.dotc.core.*
@@ -30,8 +31,7 @@ class FilterMapOptimizer extends PluginPhase:
             && forallName.mangledString == "forall"
             && seqExpr.tpe <:< defn.SeqClass.typeRef.appliedTo(TypeBounds.empty) =>
 
-        val elementType = seqExpr.tpe.widen match
-          case AppliedType(seqType, typeArgs) => typeArgs.head
+        val elementType = elementFirstType(seqExpr)
 
         val pos        = tree.span
         val sourceFile = ctx.source.file.name
