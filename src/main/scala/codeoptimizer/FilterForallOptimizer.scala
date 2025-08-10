@@ -13,9 +13,9 @@ import dotty.tools.dotc.core.Types.*
 import dotty.tools.dotc.plugins.*
 import dotty.tools.dotc.transform.*
 
-class FilterMapOptimizer extends PluginPhase:
+class FilterForallOptimizer extends PluginPhase:
 
-  override val phaseName: String      = "filterMapOptimizer"
+  override val phaseName: String      = "FilterForallOptimizer"
   override val runsAfter: Set[String] = Set("typer")
 
   override def transformApply(tree: Apply)(using Context): Tree =
