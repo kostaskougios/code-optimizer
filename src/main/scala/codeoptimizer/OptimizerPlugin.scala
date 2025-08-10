@@ -7,6 +7,7 @@ class OptimizerPlugin extends StandardPlugin:
   override val name: String        = "OptimizerPlugin"
   override val description: String = "Optimizes scala collection operations"
 
-  override def init(options: List[String]): List[PluginPhase] = List(
-    new SeqFilterForallOptimizer
+  override def initialize(options: List[String])(using Context): List[PluginPhase] = List(
+    SeqFilterForallOptimizer(),
+    IterableFilterMapOptimizer()
   )

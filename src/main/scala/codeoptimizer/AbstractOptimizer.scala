@@ -37,10 +37,9 @@ abstract class AbstractOptimizer extends PluginPhase:
             && forallName.mangledString == secondCall
             && seqExprTypeCheck(seqExpr) =>
 
-        val elementType = elementFirstType(seqExpr)
-
         reportOptimization(getClass, s"$firstCall→$secondCall", tree)
 
+        val elementType     = elementFirstType(seqExpr)
         val listOpsSym      = requiredModule(s"codeoptimizer.$implClass")
         val filterForallSym = listOpsSym.info.decl(termName(implMethod))
 
