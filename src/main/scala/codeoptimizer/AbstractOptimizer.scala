@@ -23,6 +23,7 @@ abstract class AbstractOptimizer extends PluginPhase:
   protected def secondCall: String
   protected def implClass: String
   protected def implMethod: String
+  protected def seqExprTypeCheck(seqExpr: Tree)(using Context): Boolean
   override def transformApply(tree: Apply)(using Context): Tree =
     tree match
       case Apply(
@@ -34,7 +35,7 @@ abstract class AbstractOptimizer extends PluginPhase:
           )
           if filterName.mangledString == firstCall
             && forallName.mangledString == secondCall
-            && seqExpr.tpe <:< defn.SeqClass.typeRef.appliedTo(TypeBounds.empty) =>
+            && seqExprTypeCheck(seqExpr) =>
 
         val elementType = elementFirstType(seqExpr)
 

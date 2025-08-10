@@ -16,6 +16,8 @@ import dotty.tools.dotc.transform.*
 
 class FilterForallOptimizer extends AbstractOptimizer:
 
+  override protected def seqExprTypeCheck(seqExpr: Tree)(using Context): Boolean = seqExpr.tpe <:< defn.SeqClass.typeRef.appliedTo(TypeBounds.empty)
+
   override protected def firstCall = "filter"
 
   override protected def secondCall = "forall"
