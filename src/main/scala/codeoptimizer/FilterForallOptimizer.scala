@@ -1,6 +1,7 @@
 package codeoptimizer
 
 import codeoptimizer.Utils.elementFirstType
+import codeoptimizer.Utils.reportOptimization
 import dotty.tools.dotc.*
 import dotty.tools.dotc.ast.tpd.*
 import dotty.tools.dotc.core.*
@@ -33,12 +34,9 @@ class FilterForallOptimizer extends PluginPhase:
 
         val elementType = elementFirstType(seqExpr)
 
-        val pos        = tree.span
-        val sourceFile = ctx.source.file.name
-        val lineNumber = ctx.source.offsetToLine(pos.start) + 1
-        println(s"[${getClass.getSimpleName}] Optimizing filter→forall at $sourceFile:$lineNumber")
+        reportOptimization(getClass, "filter→forall", tree)
 
-        val listOpsSym      = requiredModule("codeoptimizer.ListOps")
+        val listOpsSym      = requiredModule("codeoptimizer.SeqOps")
         val filterForallSym = listOpsSym.info.decl(termName("filterForall"))
 
         Apply(
