@@ -25,23 +25,31 @@ class FilterMapOptimizer extends PluginPhase:
               Apply(Select(seqExpr, filterName), List(pred)),
               forallName
             ),
-            List(all)
+            List(forallPred)
           )
           if filterName.mangledString == "filter"
             && forallName.mangledString == "forall"
             && seqExpr.tpe <:< defn.SeqClass.typeRef.appliedTo(TypeBounds.empty) =>
 
+        val elementType = seqExpr.tpe.widen match
+          case AppliedType(seqType, typeArgs) => typeArgs.head
+
         val pos        = tree.span
         val sourceFile = ctx.source.file.name
         val lineNumber = ctx.source.offsetToLine(pos.start) + 1
-        println(s"[FilterMapOptimizer] Found filter→forall at $sourceFile:$lineNumber")
+        println(s"[FilterMapOptimizer] Found filter→forall at $sourceFile:$lineNumber , element type ${elementType.show}")
 
         val listOpsSym      = requiredModule("codeoptimizer.ListOps")
-        val filterForallSym = listOpsSym.info.decl(termName("filterForall")).symbol
+        val filterForallSym = listOpsSym.info.decl(termName("filterForall"))
 
-        Apply(
-          Select(ref(listOpsSym), filterForallSym.name),
-          List(pred, all, seqExpr)
+        val a = Apply(
+          TypeApply(
+            Select(ref(listOpsSym), filterForallSym.name),
+            List(TypeTree(elementType))
+          ),
+          List(pred, forallPred, seqExpr)
         ).withSpan(tree.span)
+        println(a.show)
+        a
       case _ =>
         tree
