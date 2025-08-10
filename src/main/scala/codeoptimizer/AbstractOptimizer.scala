@@ -28,13 +28,16 @@ abstract class AbstractOptimizer extends PluginPhase:
     tree match
       case Apply(
             Select(
-              Apply(Select(seqExpr, filterName), List(pred)),
-              forallName
+              Apply(
+                Select(seqExpr, call1),
+                List(pred)
+              ),
+              call2
             ),
             List(forallPred)
           )
-          if filterName.mangledString == firstCall
-            && forallName.mangledString == secondCall
+          if call1.mangledString == firstCall
+            && call2.mangledString == secondCall
             && seqExprTypeCheck(seqExpr) =>
 
         reportOptimization(getClass, s"$firstCall→$secondCall", tree)

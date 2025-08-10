@@ -16,7 +16,9 @@ import dotty.tools.dotc.transform.*
 
 class IterableFilterMapOptimizer(using Context) extends AbstractOptimizer:
   lazy val IterableClass = requiredClass("scala.collection.Iterable").typeRef.appliedTo(TypeBounds.empty)
-  override protected def seqExprTypeCheck(seqExpr: Tree)(using Context): Boolean = seqExpr.tpe <:< IterableClass
+  override protected def seqExprTypeCheck(seqExpr: Tree)(using Context): Boolean =
+    println(seqExpr.tpe.show)
+    seqExpr.tpe <:< IterableClass
   override protected def firstCall                                               = "filter"
   override protected def secondCall                                              = "map"
   override protected def implClass: String                                       = "IterableOps"
