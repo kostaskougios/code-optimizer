@@ -14,3 +14,9 @@ object Utils:
     val sourceFile = ctx.source.file.name
     val lineNumber = ctx.source.offsetToLine(pos.start) + 1
     println(s"[${clazz.getSimpleName}] Optimizing $optimization at $sourceFile:$lineNumber")
+
+  def reportMsg(clazz: Class[?], message: String, tree: Tree[?])(using ctx: Context) =
+    val pos        = tree.span
+    val sourceFile = ctx.source.file.name
+    val lineNumber = ctx.source.offsetToLine(pos.start) + 1
+    println(s"[${clazz.getSimpleName}] $message at $sourceFile:$lineNumber")
