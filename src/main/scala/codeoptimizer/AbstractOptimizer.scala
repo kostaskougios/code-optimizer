@@ -14,17 +14,13 @@ import dotty.tools.dotc.core.Types.*
 import dotty.tools.dotc.plugins.*
 import dotty.tools.dotc.transform.*
 
-abstract class AbstractOptimizer extends PluginPhase:
-
-  override val phaseName: String      = getClass.getSimpleName
-  override val runsAfter: Set[String] = Set("typer")
-
+abstract class AbstractOptimizer:
   protected def firstCall: String
   protected def secondCall: String
   protected def implClass: String
   protected def implMethod: String
   protected def seqExprTypeCheck(seqExpr: Tree)(using Context): Boolean
-  override def transformApply(tree: Apply)(using Context): Tree =
+  def transformApply(tree: Apply)(using Context): Apply =
     tree match
       case Apply(
             Select(
