@@ -14,37 +14,12 @@ import dotty.tools.dotc.core.Types.*
 import dotty.tools.dotc.plugins.*
 import dotty.tools.dotc.transform.*
 
-class FilterForallOptimizer extends PluginPhase:
+class FilterForallOptimizer extends AbstractOptimizer:
 
-  override val phaseName: String      = "FilterForallOptimizer"
-  override val runsAfter: Set[String] = Set("typer")
+  override protected def firstCall = "filter"
 
-  override def transformApply(tree: Apply)(using Context): Tree =
-    tree match
-      case Apply(
-            Select(
-              Apply(Select(seqExpr, filterName), List(pred)),
-              forallName
-            ),
-            List(forallPred)
-          )
-          if filterName.mangledString == "filter"
-            && forallName.mangledString == "forall"
-            && seqExpr.tpe <:< defn.SeqClass.typeRef.appliedTo(TypeBounds.empty) =>
+  override protected def secondCall = "forall"
 
-        val elementType = elementFirstType(seqExpr)
+  override protected def implClass: String = "SeqOps"
 
-        reportOptimization(getClass, "filter→forall", tree)
-
-        val listOpsSym      = requiredModule("codeoptimizer.SeqOps")
-        val filterForallSym = listOpsSym.info.decl(termName("filterForall"))
-
-        Apply(
-          TypeApply(
-            Select(ref(listOpsSym), filterForallSym.name),
-            List(TypeTree(elementType))
-          ),
-          List(pred, forallPred, seqExpr)
-        ).withSpan(tree.span)
-      case _ =>
-        tree
+  override protected def implMethod: String = "filterForall"
