@@ -19,12 +19,15 @@ class IterableFilterMapOptimizer(using Context) extends AbstractOptimizer:
   override def transformApply(tree: Apply)(using Context): Apply =
     tree match
       case Apply(
-            Select(
-              Apply(
-                Select(seqExpr, call1),
-                List(call1Param)
+            TypeApply(
+              Select(
+                Apply(
+                  Select(seqExpr, call1),
+                  List(call1Param)
+                ),
+                call2
               ),
-              call2
+              List(call2Type)
             ),
             List(call2Param)
           )
@@ -41,7 +44,7 @@ class IterableFilterMapOptimizer(using Context) extends AbstractOptimizer:
         Apply(
           TypeApply(
             Select(ref(opsSym), methodSym.name),
-            List(TypeTree(elementType))
+            List(TypeTree(elementType), call2Type)
           ),
           List(call1Param, call2Param, seqExpr)
         ).withSpan(tree.span)
