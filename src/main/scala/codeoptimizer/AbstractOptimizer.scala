@@ -30,11 +30,11 @@ abstract class AbstractOptimizer extends PluginPhase:
             Select(
               Apply(
                 Select(seqExpr, call1),
-                List(pred)
+                List(call1Param)
               ),
               call2
             ),
-            List(forallPred)
+            List(call2Param)
           )
           if call1.mangledString == firstCall
             && call2.mangledString == secondCall
@@ -51,7 +51,7 @@ abstract class AbstractOptimizer extends PluginPhase:
             Select(ref(listOpsSym), filterForallSym.name),
             List(TypeTree(elementType))
           ),
-          List(pred, forallPred, seqExpr)
+          List(call1Param, call2Param, seqExpr)
         ).withSpan(tree.span)
       case _ =>
         tree
