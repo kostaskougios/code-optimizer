@@ -16,3 +16,6 @@ import dotty.tools.dotc.transform.*
 
 trait AbstractOptimizer:
   def transformApply(tree: Apply)(using Context): Apply
+
+// a useful type hierarchy for Tree:
+// https://www.scala-lang.org/api/3.x/scala/quoted/Quotes$reflectModule.html
