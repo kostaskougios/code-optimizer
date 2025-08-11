@@ -15,7 +15,9 @@ import dotty.tools.dotc.plugins.*
 import dotty.tools.dotc.transform.*
 
 class IterableFilterMapOptimizer(using Context) extends AbstractOptimizer:
-  private val IterableClass                                      = requiredClass("scala.collection.Iterable").typeRef.appliedTo(TypeBounds.empty)
+  private val IterableClass = requiredClass("scala.collection.Iterable").typeRef.appliedTo(TypeBounds.empty)
+  private val SeqClass      = defn.SeqClass.typeRef.appliedTo(TypeBounds.empty)
+
   override def transformApply(tree: Apply)(using Context): Apply =
     tree match
       case Apply(
@@ -35,11 +37,12 @@ class IterableFilterMapOptimizer(using Context) extends AbstractOptimizer:
             && call2.mangledString == "map"
             && seqExpr.tpe <:< IterableClass =>
 
-        reportOptimization(getClass, s"filter→map", tree)
-
+        val ops         = if seqExpr.tpe <:< SeqClass then "SeqOps" else "IterableOps"
         val elementType = elementFirstType(seqExpr)
-        val opsSym      = requiredModule(s"codeoptimizer.IterableOps")
+        val opsSym      = requiredModule(s"codeoptimizer.$ops")
         val methodSym   = opsSym.info.decl(termName("filterMap"))
+
+        reportOptimization(getClass, s"filter→map to $ops.filterMap", tree)
 
         Apply(
           TypeApply(
