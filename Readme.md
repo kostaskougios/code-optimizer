@@ -1,7 +1,7 @@
 run
 `sbt assembly`
 
-then add the generated jar as a scalac plugin i.e.
+then add the generated jar as a scalac plugin to your scala 3 project, i.e.
 
 ```
 ThisBuild / scalacOptions ++= Seq(
