@@ -24,6 +24,7 @@ class OptimizerPlugin extends StandardPlugin:
       override val runsAfter: Set[String] = Set("typer")
 
       val optimizers = List(
+        StatisticsCollector(),
         SeqFilterForallOptimizer(),
         IterableFilterMapOptimizer()
       )
@@ -31,4 +32,9 @@ class OptimizerPlugin extends StandardPlugin:
       override def transformApply(tree: Apply)(using Context): Tree =
         optimizers.foldLeft(tree): (tree, opt) =>
           opt.transformApply(tree)
+
+      override def runOn(units: List[CompilationUnit])(using runCtx: Context): List[CompilationUnit] =
+        val r = super.runOn(units)
+        println(Statistics.toStatisticsString)
+        r
   )
