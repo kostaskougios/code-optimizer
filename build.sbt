@@ -22,3 +22,10 @@ lazy val `compiler-plugin` = project
     }
   )
   .enablePlugins(AssemblyPlugin)
+
+lazy val `test-project` = project
+  .settings(
+    scalacOptions ++= Seq(
+      "-Xplugin:/Users/kkougios/projects/code-optimizer/compiler-plugin/target/scala-3.7.2/compiler-plugin-assembly-0.1.0.jar"
+    )
+  )
