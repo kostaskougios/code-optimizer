@@ -1,5 +1,5 @@
 import sbtassembly.AssemblyPlugin
-import sbtassembly.AssemblyPlugin.autoImport.*
+// import sbtassembly.AssemblyPlugin.autoImport.`*`
 
 ThisBuild / scalaVersion := "3.7.2"
 
@@ -25,7 +25,10 @@ lazy val `compiler-plugin` = project
 
 lazy val `test-project` = project
   .settings(
+    libraryDependencies ++= Seq(
+      "xyz.matthieucourt" %% "layoutz" % "0.1.0"
+    ),
     scalacOptions ++= Seq(
-      "-Xplugin:/Users/kkougios/projects/code-optimizer/compiler-plugin/target/scala-3.7.2/compiler-plugin-assembly-0.1.0.jar"
+      "-Xplugin:compiler-plugin/target/scala-3.7.2/compiler-plugin-assembly-0.1.0.jar"
     )
   )
