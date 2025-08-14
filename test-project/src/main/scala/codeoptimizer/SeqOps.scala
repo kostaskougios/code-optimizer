@@ -8,7 +8,7 @@ object SeqOps:
         else
           val b      = List.newBuilder[B]
           var remain = l
-          while !remain.isEmpty do
+          while !remain.eq(Nil) do
             if pred(remain.head) then b += mapper(remain.head)
             remain = remain.tail
 
