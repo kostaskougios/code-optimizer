@@ -25,12 +25,19 @@ lazy val `compiler-plugin` = project
   )
   .enablePlugins(AssemblyPlugin)
 
+lazy val enableCompilerPlugin = settingKey[Boolean]("Enable the compiler plugin")
+
 lazy val `test-project` = project
   .settings(
+    enableCompilerPlugin := sys.props.get("enablePlugin").contains("true"),
     libraryDependencies ++= Seq(
       "xyz.matthieucourt" %% "layoutz" % "0.1.0"
     ),
-    scalacOptions ++= Seq(
-      s"-Xplugin:compiler-plugin/target/scala-$MyScalaVersion/compiler-plugin-assembly-$CompilerPluginVersion.jar"
-    )
+    scalacOptions ++= {
+      if (enableCompilerPlugin.value)
+        Seq(
+          s"-Xplugin:compiler-plugin/target/scala-$MyScalaVersion/compiler-plugin-assembly-$CompilerPluginVersion.jar"
+        )
+      else Nil
+    }
   )

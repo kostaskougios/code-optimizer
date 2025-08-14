@@ -1,0 +1,1 @@
+sbt -DenablePlugin=true "clean ; compiler-plugin/assembly ; test-project/run"

@@ -1,1 +1,0 @@
-sbt "clean ; compiler-plugin/assembly ; test-project/run"
