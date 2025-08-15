@@ -18,7 +18,7 @@ class OptimizerPlugin extends StandardPlugin:
         StatisticsCollector(),
         ListWithFilterForeachOptimizer(),
         SeqFilterForallOptimizer(),
-        IterableFilterMapOptimizer()
+        FilterMapOptimizer()
       )
 
       override def transformApply(tree: Apply)(using Context): Tree =
