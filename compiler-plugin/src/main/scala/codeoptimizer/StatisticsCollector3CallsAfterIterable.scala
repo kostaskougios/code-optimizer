@@ -11,52 +11,47 @@ import dotty.tools.dotc.core.Types.*
 class StatisticsCollector3CallsAfterIterable(using Context) extends AbstractOptimizer:
   private val IterableClass = requiredClass("scala.collection.Iterable").typeRef.appliedTo(TypeBounds.empty)
 
-  private def recordStats(seqExpr: dotty.tools.dotc.ast.Trees.Tree[Type], call1: Name, call2: Name): Unit =
+  private def recordStats(seqExpr: dotty.tools.dotc.ast.Trees.Tree[Type], calls: List[Name]): Unit =
     val iterableName = seqExpr.tpe.widenTermRefExpr.typeSymbol.name.show
-    Statistics.inc(s"$iterableName.${call1.mangledString}.${call2.mangledString}")
+    Statistics.inc(s"--$iterableName.${calls.map(_.mangledString).mkString(".")}")
 
-  override def transformApply(tree: Apply)(using Context): Apply =
+  case class Rec(seqExpr: dotty.tools.dotc.ast.Trees.Tree[Type], calls: List[Name]):
+    def +(n: Name) = copy(calls = calls :+ n)
+
+  def scanApply(tree: dotty.tools.dotc.ast.Trees.Tree[Type])(using Context): Option[Rec] =
     tree match
       case Apply(
-            Select(
-              Apply(
-                TypeApply(
-                  Select(
-                    Apply(
-                      Select(seqExpr, call1),
-                      List(call1Param)
-                    ),
-                    call2
-                  ),
-                  List(call2Type)
-                ),
-                List(call2Param)
-              ),
-              call3
-            ),
-            List(call3Param)
+            Select(seqExpr, call1),
+            callParams
           ) if seqExpr.tpe <:< IterableClass =>
-
-        recordStats(seqExpr, call1, call2)
-        tree
+        Some(Rec(seqExpr, call1 :: Nil))
       case Apply(
             Select(
-              Apply(
-                Select(
-                  Apply(
-                    Select(seqExpr, call1),
-                    List(call1Param)
-                  ),
-                  call2
-                ),
-                List(call2Param)
-              ),
-              call3
+              app,
+              call
             ),
-            List(call3Param)
-          ) if seqExpr.tpe <:< IterableClass =>
+            callParams
+          ) =>
+        scanApply(app) match
+          case Some(rec) => Some(rec + call)
+          case None      => None
+      case Apply(
+            TypeApply(
+              Select(
+                app,
+                call
+              ),
+              callTypes
+            ),
+            callParams
+          ) =>
+        scanApply(app) match
+          case Some(rec) => Some(rec + call)
+          case None      => None
+      case _ => None
 
-        recordStats(seqExpr, call1, call2)
-        tree
-      case _ =>
-        tree
+  override def transformApply(tree: Apply)(using Context): Apply =
+    scanApply(tree) match
+      case Some(rec) => recordStats(rec.seqExpr, rec.calls)
+      case _         =>
+    tree
