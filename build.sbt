@@ -31,7 +31,8 @@ lazy val `test-project` = project
   .settings(
     enableCompilerPlugin := sys.props.get("enablePlugin").contains("true"),
     libraryDependencies ++= Seq(
-      "xyz.matthieucourt" %% "layoutz" % "0.1.0"
+      "xyz.matthieucourt" %% "layoutz"   % "0.1.0",
+      "org.scalatest"     %% "scalatest" % "3.2.19" % Test
     ),
     scalacOptions ++= {
       if (enableCompilerPlugin.value)
