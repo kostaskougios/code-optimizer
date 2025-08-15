@@ -39,5 +39,6 @@ lazy val `test-project` = project
           s"-Xplugin:compiler-plugin/target/scala-$MyScalaVersion/compiler-plugin-assembly-$CompilerPluginVersion.jar"
         )
       else Nil
-    }
+    },
+    run / fork           := true
   )
