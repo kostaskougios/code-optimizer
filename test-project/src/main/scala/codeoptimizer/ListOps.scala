@@ -12,3 +12,6 @@ object ListOps:
         remain = remain.tail
 
       b.result()
+
+  def withFilterForeach[A, U](pred: A => Boolean, f: A => U, l: List[A]): Unit =
+    l.foreach(a => if pred(a) then f(a))

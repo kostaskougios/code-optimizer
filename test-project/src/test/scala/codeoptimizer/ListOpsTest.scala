@@ -12,3 +12,11 @@ class ListOpsTest extends AnyFunSuiteLike:
         val n    = l.filter(_ >= j).map(_ * 2)
         // println(s"$l , $lops , $n")
         lops should be(n)
+
+      test(s"withFilterForeach list of $i size and $j filter"):
+        val l    = (0 until i).toList
+        var sum1 = 0
+        ListOps.withFilterForeach[Int, Unit](_ >= j, sum1 += _, l)
+        var sum2 = 0
+        l.withFilter(_ >= j).foreach(sum2 += _)
+        sum1 should be(sum2)
