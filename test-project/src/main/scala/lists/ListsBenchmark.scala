@@ -1,10 +1,12 @@
 package lists
 
 object ListsBenchmark:
-  private val largeList = (1 to 1000).toList
-  private val smallList = List(1, 2, 3)
-  private val emptyList = List.empty[Int]
-  private val listOfOne = List(5)
+  private val largeList   = (1 to 1000).toList
+  private val smallList   = List(1, 2, 3)
+  private val emptyList   = List.empty[Int]
+  private val listOfOne   = List(5)
+  private val listOfTwo   = List(5, 10)
+  private val listOfThree = List(5, 10, 15)
 
   def runFilterMapLarge(): List[Int] =
     var i = 0
@@ -35,5 +37,21 @@ object ListsBenchmark:
     var r = List.empty[Int]
     while i < 900000 do
       r = listOfOne.filter(_ >= 2).map(_ * 2)
+      i += 1
+    r
+
+  def runFilterMapListOfTwo(): List[Int] =
+    var i = 0
+    var r = List.empty[Int]
+    while i < 700000 do
+      r = listOfTwo.filter(_ >= 7).map(_ * 2)
+      i += 1
+    r
+
+  def runFilterMapListOfThree(): List[Int] =
+    var i = 0
+    var r = List.empty[Int]
+    while i < 600000 do
+      r = listOfThree.filter(_ >= 7).map(_ * 2)
       i += 1
     r

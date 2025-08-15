@@ -23,6 +23,10 @@ def benchmark(): Unit =
       lists.ListsBenchmark.runFilterMapEmptyList()
     Timings.profile("filter-map-one"):
       lists.ListsBenchmark.runFilterMapListOfOne()
+    Timings.profile("filter-map-two"):
+      lists.ListsBenchmark.runFilterMapListOfTwo()
+    Timings.profile("filter-map-three"):
+      lists.ListsBenchmark.runFilterMapListOfThree()
 
     i += 1
     if i % 100 == 99 then println(Timings.profilingTable)
