@@ -21,6 +21,8 @@ def benchmark(): Unit =
       lists.ListsBenchmark.runFilterMapSmallList()
     Timings.profile("filter-map-empty"):
       lists.ListsBenchmark.runFilterMapEmptyList()
+    Timings.profile("filter-map-one"):
+      lists.ListsBenchmark.runFilterMapListOfOne()
 
     i += 1
     if i % 100 == 99 then println(Timings.profilingTable)
