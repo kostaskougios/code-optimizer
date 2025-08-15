@@ -1,7 +1,20 @@
 import game.utils.Timings
 
 /**
-   * Without plugin:
+ *
+ * What can be useful optimization:
+ * - from scala3 compiler:
+ * ┌───────────────────────────────────┬───────┐
+ * │ Name                              │ Count │
+ * ├───────────────────────────────────┼───────┤
+ * │ List.withFilter.foreach           │ 85    │
+ * │ List.withFilter.map               │ 40    │
+ * │ List.filter.map                   │ 13    │
+ * │ View.withFilter.foreach           │ 11    │
+ * │ List.find.getOrElse               │ 10    │
+ * │ Map.withFilter.foreach            │ 10    │
+ * 
+ * Without plugin:
 [info] ┌──────────────────┬───────┬───────┬───────────┬───────┬───────────────┐
 [info] │ Name             │ Last  │ Min   │ Total     │ Calls │ Per Call (ns) │
 [info] ├──────────────────┼───────┼───────┼───────────┼───────┼───────────────┤
