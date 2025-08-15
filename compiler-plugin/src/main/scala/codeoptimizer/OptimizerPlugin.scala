@@ -15,7 +15,7 @@ class OptimizerPlugin extends StandardPlugin:
       override val runsAfter: Set[String] = Set("typer")
 
       val optimizers = List(
-        StatisticsCollector3CallsAfterIterable(),
+        StatisticsCollectorForIterable(),
         WithFilterForeachOptimizer(),
         SeqFilterForallOptimizer(),
         FilterMapOptimizer()

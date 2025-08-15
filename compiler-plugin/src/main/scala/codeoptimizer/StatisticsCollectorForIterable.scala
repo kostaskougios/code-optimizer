@@ -8,12 +8,12 @@ import dotty.tools.dotc.core.Names.Name
 import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.core.Types.*
 
-class StatisticsCollector3CallsAfterIterable(using Context) extends AbstractOptimizer:
+class StatisticsCollectorForIterable(using Context) extends AbstractOptimizer:
   private val IterableClass = requiredClass("scala.collection.Iterable").typeRef.appliedTo(TypeBounds.empty)
 
   private def recordStats(seqExpr: dotty.tools.dotc.ast.Trees.Tree[Type], calls: List[Name]): Unit =
     val iterableName = seqExpr.tpe.widenTermRefExpr.typeSymbol.name.show
-    Statistics.inc(s"--$iterableName.${calls.map(_.mangledString).mkString(".")}")
+    Statistics.inc(s"$iterableName.${calls.map(_.mangledString).mkString(".")}")
 
   case class Rec(seqExpr: dotty.tools.dotc.ast.Trees.Tree[Type], calls: List[Name]):
     def +(n: Name) = copy(calls = calls :+ n)
