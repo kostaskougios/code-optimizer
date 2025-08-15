@@ -7,7 +7,7 @@ import dotty.tools.dotc.core.Contexts.*
 import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.core.Types.*
 
-class StatisticsCollector(using Context) extends AbstractOptimizer:
+class StatisticsCollector2CallsAfterIterable(using Context) extends AbstractOptimizer:
   private val IterableClass = requiredClass("scala.collection.Iterable").typeRef.appliedTo(TypeBounds.empty)
   private val SeqClass      = defn.SeqClass.typeRef.appliedTo(TypeBounds.empty)
 
