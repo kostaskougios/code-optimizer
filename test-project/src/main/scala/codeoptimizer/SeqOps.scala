@@ -6,13 +6,19 @@ object SeqOps:
       case l: List[A] =>
         if l.isEmpty then Nil
         else
-          val b      = List.newBuilder[B]
           var remain = l
-          while !remain.eq(Nil) do
-            if pred(remain.head) then b += mapper(remain.head)
-            remain = remain.tail
+          val p1     = pred(remain.head)
+          val m1     = if p1 then mapper(remain.head) else null.asInstanceOf[B]
+          remain = l.tail
+          if remain.isEmpty then if m1 == null then Nil else m1 :: Nil
+          else
+            val b = List.newBuilder[B]
+            if m1 != null then b += m1
+            while !remain.eq(Nil) do
+              if pred(remain.head) then b += mapper(remain.head)
+              remain = remain.tail
 
-          b.result()
+            b.result()
 
   def filterForall[A](pred: A => Boolean, all: A => Boolean, xs: Seq[A]): Boolean =
     xs.iterator.filter(pred).forall(all)
