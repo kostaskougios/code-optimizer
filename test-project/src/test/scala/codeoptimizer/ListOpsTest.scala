@@ -10,6 +10,6 @@ class ListOpsTest extends AnyFunSuiteLike:
       test(s"filterMap list of $i size and $j filter"):
         val l    = (0 to i - 1).toList
         val lops = ListOps.filterMap[Int, Int](_ >= j, _ * 2, l)
-        val n    = l.filter(_ > j).map(_ * 2)
-        println(s"$l , $lops , $n")
+        val n    = l.filter(_ >= j).map(_ * 2)
+        // println(s"$l , $lops , $n")
         lops should be(n)
