@@ -14,4 +14,8 @@ object ListOps:
       b.result()
 
   def withFilterForeach[A, U](pred: A => Boolean, f: A => U, l: List[A]): Unit =
-    l.foreach(a => if pred(a) then f(a))
+    var these = l
+    while !these.isEmpty do
+      val h = these.head
+      if pred(h) then f(h)
+      these = these.tail
