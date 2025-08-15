@@ -1,6 +1,5 @@
 package codeoptimizer
 
-import dotty.tools.dotc.ast.*
 import dotty.tools.dotc.ast.Trees.*
 import dotty.tools.dotc.core.Contexts.Context
 import dotty.tools.dotc.core.Types.*
