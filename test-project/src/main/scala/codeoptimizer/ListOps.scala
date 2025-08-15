@@ -5,23 +5,26 @@ object ListOps:
     if l.isEmpty then Nil
     else
       var remain = l
-      val p1     = pred(remain.head)
+      val h1     = remain.head
+      val p1     = pred(h1)
       remain = remain.tail
-      if remain.isEmpty then if p1 then mapper(l.head) :: Nil else Nil
+      if remain.isEmpty then if p1 then mapper(h1) :: Nil else Nil
       else
-        val p2 = pred(remain.head)
+        val h2 = remain.head
+        val p2 = pred(h2)
         remain = remain.tail
         if remain.isEmpty then
-          if p1 && p2 then mapper(l.head) :: mapper(l.tail.head) :: Nil
-          else if p1 then mapper(l.head) :: Nil
-          else if p2 then mapper(l.tail.head) :: Nil
+          if p1 && p2 then mapper(h1) :: mapper(h2) :: Nil
+          else if p1 then mapper(h1) :: Nil
+          else if p2 then mapper(h2) :: Nil
           else Nil
         else
           val b = List.newBuilder[B]
-          if p1 then b += mapper(l.head)
-          if p2 then b += mapper(l.tail.head)
-          while !remain.eq(Nil) do
-            if pred(remain.head) then b += mapper(remain.head)
+          if p1 then b += mapper(h1)
+          if p2 then b += mapper(h2)
+          while remain ne Nil do
+            val h = remain.head
+            if pred(h) then b += mapper(h)
             remain = remain.tail
 
           b.result()
