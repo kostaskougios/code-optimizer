@@ -15,16 +15,18 @@ import game.utils.Timings
  * │ Map.withFilter.foreach            │ 10    │
  * 
  * Without plugin:
-[info] ┌──────────────────┬───────┬───────┬───────────┬───────┬───────────────┐
-[info] │ Name             │ Last  │ Min   │ Total     │ Calls │ Per Call (ns) │
-[info] ├──────────────────┼───────┼───────┼───────────┼───────┼───────────────┤
-[info] │ filter-map-empty │ 2.673 │ 2.444 │ 2.134.504 │ 799   │ 2671470       │
-[info] │ filter-map-large │ 4.226 │ 3.876 │ 3.549.473 │ 799   │ 4442394       │
-[info] │ filter-map-one   │ 6.030 │ 5.778 │ 4.838.293 │ 799   │ 6055435       │
-[info] │ filter-map-small │ 4.697 │ 4.469 │ 3.740.020 │ 799   │ 4680876       │
-[info] │ filter-map-three │ 9.426 │ 9.113 │ 7.492.843 │ 799   │ 9377776       │
-[info] │ filter-map-two   │ 6.960 │ 6.690 │ 5.604.679 │ 799   │ 7014617       │
-[info] └──────────────────┴───────┴───────┴───────────┴───────┴───────────────┘  
+ [info] ┌──────────────────────────┬───────┬───────┬───────────┬───────┬───────────────┐
+ [info] │ Name                     │ Last  │ Min   │ Total     │ Calls │ Per Call (ns) │
+ [info] ├──────────────────────────┼───────┼───────┼───────────┼───────┼───────────────┤
+ [info] │ filter-map-empty         │ 2.682 │ 2.645 │ 1.078.153 │ 399   │ 2702139       │
+ [info] │ filter-map-large         │ 4.152 │ 3.950 │ 1.674.041 │ 399   │ 4195591       │
+ [info] │ filter-map-one           │ 6.289 │ 6.233 │ 2.526.858 │ 399   │ 6332978       │
+ [info] │ filter-map-small         │ 4.672 │ 4.596 │ 1.864.509 │ 399   │ 4672954       │
+ [info] │ filter-map-three         │ 9.263 │ 9.216 │ 3.739.389 │ 399   │ 9371902       │
+ [info] │ filter-map-two           │ 7.831 │ 6.992 │ 2.860.944 │ 399   │ 7170287       │
+ [info] │ withFilter-foreach-large │ 1.793 │ 1.681 │ 699.051   │ 399   │ 1752008       │
+ [info] │ withFilter-foreach-small │ 1.408 │ 1.346 │ 565.122   │ 399   │ 1416347       │
+ [info] └──────────────────────────┴───────┴───────┴───────────┴───────┴───────────────┘
 
 With plugin:
 
@@ -56,6 +58,11 @@ def benchmark(): Unit =
       lists.ListsBenchmark.runFilterMapListOfTwo()
     Timings.profile("filter-map-three"):
       lists.ListsBenchmark.runFilterMapListOfThree()
+
+    Timings.profile("withFilter-foreach-large"):
+      lists.ListsBenchmark.runWithFilterForeachLarge()
+    Timings.profile("withFilter-foreach-small"):
+      lists.ListsBenchmark.runWithFilterForeachSmall()
 
     i += 1
     if i % 100 == 99 then println(Timings.profilingTable)

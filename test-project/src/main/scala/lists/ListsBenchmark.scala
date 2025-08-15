@@ -8,6 +8,28 @@ object ListsBenchmark:
   private val listOfTwo   = List(5, 10)
   private val listOfThree = List(5, 10, 15)
 
+  def runWithFilterForeachLarge(): Int =
+    var x = 0
+    var i = 0
+    while i < 1000 do
+      largeList
+        .withFilter(_ > 500)
+        .foreach: i =>
+          x += i
+      i += 1
+    x
+
+  def runWithFilterForeachSmall(): Int =
+    var x = 0
+    var i = 0
+    while i < 600000 do
+      listOfThree
+        .withFilter(_ > 7)
+        .foreach: i =>
+          x += i
+      i += 1
+    x
+
   def runFilterMapLarge(): List[Int] =
     var i = 0
     var r = List.empty[Int]
