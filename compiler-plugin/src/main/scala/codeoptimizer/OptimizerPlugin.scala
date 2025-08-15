@@ -16,7 +16,7 @@ class OptimizerPlugin extends StandardPlugin:
 
       val optimizers = List(
         StatisticsCollector(),
-        ListWithFilterForeachOptimizer(),
+        WithFilterForeachOptimizer(),
         SeqFilterForallOptimizer(),
         FilterMapOptimizer()
       )
