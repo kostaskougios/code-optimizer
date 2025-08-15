@@ -33,16 +33,17 @@ class SeqFilterForallOptimizer extends AbstractOptimizer:
 
         reportOptimization(getClass, s"filter→forall", tree)
 
-        val elementType = elementFirstType(seqExpr)
-        val opsSym      = requiredModule(s"codeoptimizer.SeqOps")
-        val methodSym   = opsSym.info.decl(termName("filterForall"))
+        (for elementType <- elementFirstType(seqExpr) yield
+          val opsSym    = requiredModule(s"codeoptimizer.SeqOps")
+          val methodSym = opsSym.info.decl(termName("filterForall"))
 
-        Apply(
-          TypeApply(
-            Select(ref(opsSym), methodSym.name),
-            List(TypeTree(elementType))
-          ),
-          List(call1Param, call2Param, seqExpr)
-        ).withSpan(tree.span)
+          Apply(
+            TypeApply(
+              Select(ref(opsSym), methodSym.name),
+              List(TypeTree(elementType))
+            ),
+            List(call1Param, call2Param, seqExpr)
+          ).withSpan(tree.span)
+        ).getOrElse(tree)
       case _ =>
         tree

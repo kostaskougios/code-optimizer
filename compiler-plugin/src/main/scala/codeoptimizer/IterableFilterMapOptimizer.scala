@@ -37,19 +37,20 @@ class IterableFilterMapOptimizer(using Context) extends AbstractOptimizer:
             && call2.mangledString == "map"
             && seqExpr.tpe <:< IterableClass =>
 
-        val ops         = if seqExpr.tpe <:< SeqClass then "SeqOps" else "IterableOps"
-        val elementType = elementFirstType(seqExpr)
-        val opsSym      = requiredModule(s"codeoptimizer.$ops")
-        val methodSym   = opsSym.info.decl(termName("filterMap"))
+        val ops = if seqExpr.tpe <:< SeqClass then "SeqOps" else "IterableOps"
+        (for elementType <- elementFirstType(seqExpr) yield
+          val opsSym    = requiredModule(s"codeoptimizer.$ops")
+          val methodSym = opsSym.info.decl(termName("filterMap"))
 
-        reportOptimization(getClass, s"filter→map to $ops.filterMap", tree)
+          reportOptimization(getClass, s"filter→map to $ops.filterMap", tree)
 
-        Apply(
-          TypeApply(
-            Select(ref(opsSym), methodSym.name),
-            List(TypeTree(elementType), call2Type)
-          ),
-          List(call1Param, call2Param, seqExpr)
-        ).withSpan(tree.span)
+          Apply(
+            TypeApply(
+              Select(ref(opsSym), methodSym.name),
+              List(TypeTree(elementType), call2Type)
+            ),
+            List(call1Param, call2Param, seqExpr)
+          ).withSpan(tree.span)
+        ).getOrElse(tree)
       case _ =>
         tree
