@@ -16,9 +16,7 @@ class OptimizerPlugin extends StandardPlugin:
 
       val optimizers = List(
         StatisticsCollectorForIterable(),
-        WithFilterForeachOptimizer(),
-        SeqFilterForallOptimizer(),
-        FilterMapOptimizer()
+        IterableOptimizer()
       )
 
       override def transformApply(tree: Apply)(using Context): Tree =
