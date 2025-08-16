@@ -1,7 +1,6 @@
 package codeoptimizer
 
-import codeoptimizer.Utils.elementFirstType
-import codeoptimizer.Utils.reportOptimization
+import codeoptimizer.Utils.{elementFirstType, reportOptimization}
 import dotty.tools.dotc.*
 import dotty.tools.dotc.ast.tpd.*
 import dotty.tools.dotc.core.*
@@ -10,7 +9,7 @@ import dotty.tools.dotc.core.Names.*
 import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.core.Types.*
 
-class SeqFilterForallOptimizer extends AbstractOptimizer:
+class SeqFilterForallOptimizer(using Context) extends AbstractOptimizer:
   override def transformApply(tree: Apply)(using Context): Apply =
     tree match
       case Apply(
