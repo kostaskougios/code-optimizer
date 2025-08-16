@@ -52,6 +52,6 @@ class StatisticsCollectorForIterable(using Context) extends AbstractOptimizer:
 
   override def transformApply(tree: Apply)(using Context): Apply =
     scanApply(tree) match
-      case Some(rec) => recordStats(rec.seqExpr, rec.calls)
-      case _         =>
+      case Some(rec) if rec.calls.size > 1 => recordStats(rec.seqExpr, rec.calls)
+      case _                               =>
     tree
