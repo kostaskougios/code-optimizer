@@ -20,43 +20,25 @@ abstract class AbstractOptimizer(using Context):
   def scanApply(tree: dotty.tools.dotc.ast.Trees.Tree[Type])(using Context): Option[Rec] =
     tree match
       case Apply(
-            Select(seqExpr, call1),
+            Select(seqExpr, call),
             callParams
           ) if seqExpr.tpe <:< IterableClass =>
-        Some(Rec(seqExpr, Call(call1, callParams, Nil) :: Nil))
+        Some(Rec(seqExpr, scanSeqApply(seqExpr) :+ Call(call, callParams, Nil)))
       case Apply(
             TypeApply(
-              Select(seqExpr, call1),
+              Select(seqExpr, call),
               callTypes
             ),
             callParams
           ) if seqExpr.tpe <:< IterableClass =>
-        println(seqExpr.show)
-        Some(Rec(seqExpr, Call(call1, callParams, callTypes) :: Nil))
-      case Apply(
-            Select(
-              app,
-              call
-            ),
-            callParams
-          ) =>
-        scanApply(app) match
-          case Some(rec) => Some(rec + Call(call, callParams, Nil))
-          case None      => None
-      case Apply(
-            TypeApply(
-              Select(
-                app,
-                call
-              ),
-              callTypes
-            ),
-            callParams
-          ) =>
-        scanApply(app) match
-          case Some(rec) => Some(rec + Call(call, callParams, callTypes))
-          case None      => None
+        Some(Rec(seqExpr, scanSeqApply(seqExpr) :+ Call(call, callParams, callTypes)))
       case _ => None
+
+  def scanSeqApply(tree: dotty.tools.dotc.ast.Trees.Tree[Type])(using Context): List[Call] =
+    tree match
+      case Apply(Select(app, call), callParams)                       => scanSeqApply(app) :+ Call(call, callParams, Nil)
+      case Apply(TypeApply(Select(app, call), callTypes), callParams) => scanSeqApply(app) :+ Call(call, callParams, callTypes)
+      case _                                                          => Nil
 
 case class Rec(
     seqExpr: dotty.tools.dotc.ast.Trees.Tree[Type],
