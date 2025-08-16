@@ -17,21 +17,18 @@ class IterableOptimizer(using Context) extends AbstractOptimizer:
     scanApply(tree) match
       case Some(rec) =>
         rec.calls match
-          case List(call1, call2) =>
+          case call1 :: call2 :: _ =>
             twoCallOptimizers
               .get((call1.name.mangledString, call2.name.mangledString))
               .map: optimizer =>
-                optimizer.transformApply(tree, rec.seqExpr, call1.callParams, call1.callTypes, call2.callParams, call2.callTypes)
+                optimizer.transformApply(tree, rec.seqExpr, rec.calls)
               .getOrElse(tree)
-          case _                  => tree
+          case _                   => tree
       case _         => tree
 
 trait Optimizer:
   def transformApply(
       tree: Apply,
       seqExpr: dotty.tools.dotc.ast.Trees.Tree[Type],
-      call1Params: List[Trees.Tree[Type]],
-      call1Types: List[Trees.Tree[Type]],
-      call2Params: List[Trees.Tree[Type]],
-      call2Types: List[Trees.Tree[Type]]
+      calls: List[Call]
   )(using Context): Apply
