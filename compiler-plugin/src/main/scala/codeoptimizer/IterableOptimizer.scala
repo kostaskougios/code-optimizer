@@ -10,9 +10,10 @@ import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.core.Types.*
 
 class IterableOptimizer(using Context) extends AbstractOptimizer:
-  val twoCallOptimizers                                          = Map(
-    ("withFilter", "foreach") -> WithFilterForeachOptimizer()
-  )
+  val twoCallOptimizers                                          = List(WithFilterForeachOptimizer(), FilterMapOptimizer())
+    .map: o =>
+      ((o.method1, o.method2), o)
+    .toMap
   override def transformApply(tree: Apply)(using Context): Apply =
     scanApply(tree) match
       case Some(rec) =>
