@@ -1,5 +1,4 @@
 package codeoptimizer
-import codeoptimizer.Utils.reportOptimization
 import dotty.tools.dotc.*
 import dotty.tools.dotc.ast.tpd.*
 import dotty.tools.dotc.core.*
@@ -12,7 +11,13 @@ class IterableOptimizer(using Context) extends AbstractOptimizer:
     .map: o =>
       ((o.method1, o.method2), o)
     .toMap
-  private val IterableClass                          = requiredClass("scala.collection.Iterable").typeRef.appliedTo(TypeBounds.empty)
+
+  private val iterableDotCall1DotCall2Optimizers = List(FilterForallOptimizer())
+    .map: o =>
+      ((o.method1, o.method2), o)
+    .toMap
+
+  private val IterableClass = requiredClass("scala.collection.Iterable").typeRef.appliedTo(TypeBounds.empty)
 
   private def transformIterableApply(tree: Apply)(using Context): (Boolean, Apply) =
     tree match
@@ -26,8 +31,11 @@ class IterableOptimizer(using Context) extends AbstractOptimizer:
             Select(Apply(Select(seqExpr, call1), call1Params), call2),
             call2Params
           ) if seqExpr.tpe <:< IterableClass =>
-        reportOptimization(getClass, s"NYI $call1→$call2", tree)
-        (false, seqApply)
+        iterableDotCall1DotCall2Optimizers
+          .get((call1.mangledString, call2.mangledString))
+          .map: optimizer =>
+            (true, optimizer.transformApply(seqApply, seqExpr, call1Params, call2Params))
+          .getOrElse((false, tree))
 
       case Apply(Select(app: Apply, call), callParams) =>
         transformIterableApply(app) match
