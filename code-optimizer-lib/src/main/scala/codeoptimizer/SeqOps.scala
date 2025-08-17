@@ -12,3 +12,9 @@ object SeqOps:
       case l: List[A] =>
         ListOps.filterForall(l, pred, all)
       case x          => throw IllegalStateException(s"NYI filterForall for ${x.getClass}")
+
+  def withFilterForeach[A, U](s: Seq[A], pred: A => Boolean, f: A => U): Unit =
+    s match
+      case l: List[A] =>
+        ListOps.withFilterForeach(l, pred, f)
+      case x          => throw IllegalStateException(s"NYI withFilterForeach for ${x.getClass}")

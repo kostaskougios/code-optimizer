@@ -10,3 +10,9 @@ object IterableOps:
     xs match
       case s: Seq[A] => SeqOps.filterForall(s, pred, all)
       case _         => xs.filter(pred).forall(all)
+
+  def withFilterForeach[A, U](s: Iterable[A], pred: A => Boolean, f: A => U): Unit =
+    s match
+      case s: Seq[A] =>
+        SeqOps.withFilterForeach(s, pred, f)
+      case x         => throw IllegalStateException(s"NYI withFilterForeach for ${x.getClass}")
