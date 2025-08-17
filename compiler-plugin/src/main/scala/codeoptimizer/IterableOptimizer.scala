@@ -17,9 +17,12 @@ class IterableOptimizer(using Context) extends AbstractOptimizer:
     .toMap
   private val IterableClass                          = requiredClass("scala.collection.Iterable").typeRef.appliedTo(TypeBounds.empty)
 
-  private def transformSeqApply(tree: Trees.Tree[Type])(using Context): (Boolean, Trees.Tree[Type]) =
+  private def transformSeqApply(tree: Apply)(using Context): (Boolean, Apply) =
     tree match
-      case seqApply @ Apply(Select(Apply(TypeApply(Select(seqExpr, call2), call2Types), call2Params), call1), call1Params) if seqExpr.tpe <:< IterableClass =>
+      case seqApply @ Apply(
+            Select(Apply(TypeApply(Select(seqExpr, call2), call2Types), call2Params), call1),
+            call1Params
+          ) if seqExpr.tpe <:< IterableClass =>
         reportOptimization(getClass, s"Found $call1→$call2", tree)
 
         iterableDotCall1DotCall2TypeOptimizers
@@ -28,19 +31,18 @@ class IterableOptimizer(using Context) extends AbstractOptimizer:
             (true, optimizer.transformApply(seqApply, seqExpr, call1Params, call2Params, call2Types))
           .getOrElse((false, tree))
 
-      case Apply(Select(app, call), callParams) =>
-        reportOptimization(getClass, s"Step ${app.tpe.show}.$call", tree)
+      case Apply(Select(app: Apply, call), callParams) =>
         transformSeqApply(app) match
           case (true, uApp) => (true, Apply(Select(uApp, call), callParams))
           case _            => (false, tree)
 
-      case Apply(TypeApply(Select(app, call), callTypes), callParams) =>
+      case Apply(TypeApply(Select(app: Apply, call), callTypes), callParams) =>
         transformSeqApply(app) match
           case (true, uApp) => (true, Apply(TypeApply(Select(uApp, call), callTypes), callParams))
           case _            => (false, tree)
-      case _                                                          => (false, tree)
+      case _                                                                 => (false, tree)
 
   override def transformApply(tree: Apply)(using Context): Apply =
     transformSeqApply(tree) match
-      case (true, uTree) => uTree.asInstanceOf[Apply]
+      case (true, uTree) => uTree
       case _             => tree
