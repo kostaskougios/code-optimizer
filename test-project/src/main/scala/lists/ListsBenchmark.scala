@@ -99,3 +99,23 @@ object ListsBenchmark:
           i > 500
       i += 1
     b
+
+  def runMapFindLarge(): Option[Int] =
+    var i = 0
+    var b = Option.empty[Int]
+    while i < 2000 do
+      b = largeList
+        .map(_ * 2)
+        .find(_ == 500)
+      i += 1
+    b
+
+  def runMapFindSmall(): Option[Int] =
+    var i = 0
+    var b = Option.empty[Int]
+    while i < 300000 do
+      b = smallList
+        .map(_ * 2)
+        .find(_ == 6)
+      i += 1
+    b
