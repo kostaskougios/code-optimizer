@@ -25,3 +25,8 @@ class DoesNotCorruptCodeTest extends AnyFunSuiteLike:
 
     Iterable(1, 2, 3, 4, 5).filter(_ > 2).forall(_ > 2) should be(true)
     Iterable(1, 2, 3, 4, 5).filter(_ > 2).forall(_ < 2) should be(false)
+
+  test("mapFind"):
+    (1 to 10).toList.map(_ * 2).find(_ == 10) should be(Some(10))
+    (1 to 10).toList.map(_ * 2).find(_ == 11) should be(None)
+    List.empty[Int].map(_ * 2).find(_ == 11) should be(None)

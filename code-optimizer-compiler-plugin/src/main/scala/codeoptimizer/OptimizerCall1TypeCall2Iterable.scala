@@ -32,16 +32,6 @@ abstract class OptimizerCall1TypeCall2Iterable(using Context):
 
       reportOptimization(getClass, s"$method1→$method2 to $ops.$replacement", tree)
 
-      println(
-        Apply(
-          TypeApply(
-            Select(ref(opsSym), methodSym.name),
-            List(TypeTree(elementType), call1Types.head)
-          ),
-          List(seqExpr, call1Params.head, call2Params.head)
-        ).withSpan(tree.span).show
-      )
-
       Apply(
         TypeApply(
           Select(ref(opsSym), methodSym.name),
