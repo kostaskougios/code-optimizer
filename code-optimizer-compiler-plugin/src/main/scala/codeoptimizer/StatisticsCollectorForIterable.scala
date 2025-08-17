@@ -13,40 +13,25 @@ import dotty.tools.dotc.core.Types.*
 class StatisticsCollectorForIterable(using Context) extends AbstractOptimizer:
   private val IterableClass = requiredClass("scala.collection.Iterable").typeRef.appliedTo(TypeBounds.empty)
 
-  def scanApply(tree: Apply)(using Context): Option[Rec] =
-    val calls     = scanSeqApply(tree)
-    val seqStarts = calls.dropWhile(c => !(c.selectOn.tpe <:< IterableClass))
-    if seqStarts.isEmpty then None
-    else Some(Rec(tree, seqStarts.head.selectOn, seqStarts))
-
-  def scanSeqApply(tree: Trees.Tree[Type])(using Context): List[Call] =
+  private def collectStats(tree: Apply)(using Context): Unit =
     tree match
-      case Apply(Select(app, call), callParams)                       => scanSeqApply(app) :+ Call(app, call, callParams, Nil)
-      case Apply(TypeApply(Select(app, call), callTypes), callParams) => scanSeqApply(app) :+ Call(app, call, callParams, callTypes)
-      case _                                                          => Nil
+      case seqApply @ Apply(TypeApply(Select(Apply(Select(seqExpr, call1), call1Params), call2), call2Types), call2Params) if seqExpr.tpe <:< IterableClass =>
+      case seqApply @ Apply(
+            Select(Apply(Select(seqExpr, call1), call1Params), call2),
+            call2Params
+          ) if seqExpr.tpe <:< IterableClass =>
+        recordStats(seqExpr, List(call1, call2))
+      case Apply(Select(app: Apply, call), callParams) => collectStats(app)
 
-  private def recordStats(rec: Rec): Unit =
-    val iterableName = rec.seqExpr.tpe.widenTermRefExpr.typeSymbol.name.show
-    val callsStr     = rec.calls.map(_.name.mangledString).mkString(".")
-    reportMsg(getClass, callsStr, rec.tree)
+      case Apply(TypeApply(Select(app: Apply, call), callTypes), callParams) => collectStats(app)
+      case _                                                                 =>
+
+  private def recordStats(seqExpr: Tree, calls: List[Name])(using Context): Unit =
+    val iterableName = seqExpr.tpe.widenTermRefExpr.typeSymbol.name.show
+    val callsStr     = calls.map(_.mangledString).mkString(".")
+    reportMsg(getClass, s"${iterableName}.$callsStr", seqExpr)
     Statistics.inc(s"$iterableName.$callsStr")
 
   override def transformApply(tree: Apply)(using Context): Apply =
-    scanApply(tree) match
-      case Some(rec) if rec.calls.size > 1 => recordStats(rec)
-      case _                               =>
+    collectStats(tree)
     tree
-
-case class Rec(
-    tree: Apply,
-    seqExpr: Trees.Tree[Type],
-    calls: List[Call]
-):
-  def +(call: Call) = copy(calls = calls :+ call)
-
-case class Call(
-    selectOn: Trees.Tree[Type],
-    name: Name,
-    callParams: List[Trees.Tree[Type]],
-    callTypes: List[Trees.Tree[Type]]
-)
