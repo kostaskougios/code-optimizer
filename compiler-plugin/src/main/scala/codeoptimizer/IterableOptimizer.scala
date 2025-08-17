@@ -1,12 +1,9 @@
 package codeoptimizer
 import codeoptimizer.Utils.reportOptimization
 import dotty.tools.dotc.*
-import dotty.tools.dotc.ast.Trees
-import dotty.tools.dotc.ast.tpd
 import dotty.tools.dotc.ast.tpd.*
 import dotty.tools.dotc.core.*
 import dotty.tools.dotc.core.Contexts.*
-import dotty.tools.dotc.core.Names.Name
 import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.core.Types.*
 
@@ -33,13 +30,11 @@ class IterableOptimizer(using Context) extends AbstractOptimizer:
         (false, seqApply)
 
       case Apply(Select(app: Apply, call), callParams) =>
-        // reportOptimization(getClass, s"scanning ${app.tpe.show}.$call", tree)
         transformIterableApply(app) match
           case (true, uApp) => (true, Apply(Select(uApp, call), callParams))
           case _            => (false, tree)
 
       case Apply(TypeApply(Select(app: Apply, call), callTypes), callParams) =>
-        // reportOptimization(getClass, s"scanning typeapply ${app.tpe.show}.$call", tree)
         transformIterableApply(app) match
           case (true, uApp) => (true, Apply(TypeApply(Select(uApp, call), callTypes), callParams))
           case _            => (false, tree)
