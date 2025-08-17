@@ -9,11 +9,14 @@ ThisBuild / name         := "code-optimizer"
 ThisBuild / organization := "org.kkougios"
 ThisBuild / version      := CompilerPluginVersion
 
+val ScalaTest = "org.scalatest"     %% "scalatest" % "3.2.19" % Test
+val Layoutz   = "xyz.matthieucourt" %% "layoutz"   % "0.1.0"
+
 lazy val `compiler-plugin` = project
   .settings(
     libraryDependencies ++= Seq(
-      "org.scala-lang"    %% "scala3-compiler" % scalaVersion.value % Provided,
-      "xyz.matthieucourt" %% "layoutz"         % "0.1.0"
+      "org.scala-lang" %% "scala3-compiler" % scalaVersion.value % Provided,
+      Layoutz
     ),
     // Package options
     Compile / packageBin / mainClass    := None,
@@ -30,14 +33,15 @@ lazy val enableCompilerPlugin = settingKey[Boolean]("Enable the compiler plugin"
 lazy val lib = project
   .settings(
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.2.19" % Test
+      ScalaTest
     )
   )
 
 lazy val `test-project` = project
   .settings(
     libraryDependencies ++= Seq(
-      "xyz.matthieucourt" %% "layoutz" % "0.1.0"
+      Layoutz,
+      ScalaTest
     ),
     enableCompilerPlugin := sys.props.get("enablePlugin").contains("true"),
     scalacOptions ++= {
