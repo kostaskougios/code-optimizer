@@ -1,13 +1,9 @@
 package codeoptimizer
 
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
+import java.text.{DecimalFormat, DecimalFormatSymbols}
 import java.util.Locale
 
-extension (d: Double)
-  def toPercentagex100: String           = s"${(d * 100).toInt} %"
-  def toPercentage: String               = s"${d.toInt} %"
-  def to2DigitDecimalPointString: String = if d.isNaN then "-" else f"$d%.2f"
+extension (d: Double) def to2DigitDecimalPointString: String = if d.isNaN then "-" else f"$d%.2f"
 
 extension (b: Boolean) def toYesNo: String = if b then "Yes" else "No"
 
