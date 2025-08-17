@@ -11,7 +11,7 @@ import dotty.tools.dotc.core.Names.*
 import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.core.Types.*
 
-abstract class Optimizer2With2ndTypeArgsListSeqIterable(using Context) extends Optimizer:
+abstract class Optimizer2With2ndTypeArgsListSeqIterable(using Context):
   def method1: String
   def method2: String
   def replacement: String
@@ -19,10 +19,12 @@ abstract class Optimizer2With2ndTypeArgsListSeqIterable(using Context) extends O
   private val SeqClass      = defn.SeqClass.typeRef.appliedTo(TypeBounds.empty)
   private val ListClass     = defn.ListClass.typeRef.appliedTo(TypeBounds.empty)
 
-  override def transformApply(
+  def transformApply(
       tree: Apply,
       seqExpr: dotty.tools.dotc.ast.Trees.Tree[Type],
-      calls: List[Call]
+      call1Params: List[Trees.Tree[Type]],
+      call2Params: List[Trees.Tree[Type]],
+      call2Types: List[Trees.Tree[Type]]
   )(using Context): Apply =
     val ops = if seqExpr.tpe <:< ListClass then "ListOps" else if seqExpr.tpe <:< SeqClass then "SeqOps" else "IterableOps"
     (for elementType <- elementFirstType(seqExpr) yield
@@ -31,9 +33,6 @@ abstract class Optimizer2With2ndTypeArgsListSeqIterable(using Context) extends O
 
       reportOptimization(getClass, s"$method1→$method2 to $ops.$replacement", tree)
 
-      val call1Params = calls.head.callParams
-      val call2Params = calls(1).callParams
-      val call2Types  = calls(1).callTypes
       Apply(
         TypeApply(
           Select(ref(opsSym), methodSym.name),
