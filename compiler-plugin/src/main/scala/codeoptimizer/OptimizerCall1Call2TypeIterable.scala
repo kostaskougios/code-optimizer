@@ -11,7 +11,7 @@ import dotty.tools.dotc.core.Names.*
 import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.core.Types.*
 
-abstract class Optimizer2With2ndTypeArgsListSeqIterable(using Context):
+abstract class OptimizerCall1Call2TypeIterable(using Context):
   def method1: String
   def method2: String
   def replacement: String
