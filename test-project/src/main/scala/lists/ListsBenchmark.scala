@@ -88,3 +88,14 @@ object ListsBenchmark:
           i > 500
       i += 1
     b
+
+  def runFilterForallSmall(): Boolean =
+    var i = 0
+    var b = false
+    while i < 300000 do
+      b = smallList
+        .filter(_ > 500)
+        .forall: i =>
+          i > 500
+      i += 1
+    b
