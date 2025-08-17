@@ -17,32 +17,35 @@ class IterableOptimizer(using Context) extends AbstractOptimizer:
     .toMap
   private val IterableClass                          = requiredClass("scala.collection.Iterable").typeRef.appliedTo(TypeBounds.empty)
 
-  private def transformSeqApply(tree: Apply)(using Context): (Boolean, Apply) =
+  private def transformIterableApply(tree: Apply)(using Context): (Boolean, Apply) =
     tree match
-      case seqApply @ Apply(
-            Select(Apply(TypeApply(Select(seqExpr, call2), call2Types), call2Params), call1),
-            call1Params
-          ) if seqExpr.tpe <:< IterableClass =>
-        reportOptimization(getClass, s"Found $call1→$call2", tree)
-
+      case seqApply @ Apply(TypeApply(Select(Apply(Select(seqExpr, call1), call1Params), call2), call2Types), call2Params) if seqExpr.tpe <:< IterableClass =>
         iterableDotCall1DotCall2TypeOptimizers
           .get((call1.mangledString, call2.mangledString))
           .map: optimizer =>
             (true, optimizer.transformApply(seqApply, seqExpr, call1Params, call2Params, call2Types))
           .getOrElse((false, tree))
+      case seqApply @ Apply(
+            Select(Apply(Select(seqExpr, call1), call1Params), call2),
+            call2Params
+          ) if seqExpr.tpe <:< IterableClass =>
+        reportOptimization(getClass, s"NYI $call1→$call2", tree)
+        (false, seqApply)
 
       case Apply(Select(app: Apply, call), callParams) =>
-        transformSeqApply(app) match
+        // reportOptimization(getClass, s"scanning ${app.tpe.show}.$call", tree)
+        transformIterableApply(app) match
           case (true, uApp) => (true, Apply(Select(uApp, call), callParams))
           case _            => (false, tree)
 
       case Apply(TypeApply(Select(app: Apply, call), callTypes), callParams) =>
-        transformSeqApply(app) match
+        // reportOptimization(getClass, s"scanning typeapply ${app.tpe.show}.$call", tree)
+        transformIterableApply(app) match
           case (true, uApp) => (true, Apply(TypeApply(Select(uApp, call), callTypes), callParams))
           case _            => (false, tree)
       case _                                                                 => (false, tree)
 
   override def transformApply(tree: Apply)(using Context): Apply =
-    transformSeqApply(tree) match
+    transformIterableApply(tree) match
       case (true, uTree) => uTree
       case _             => tree
