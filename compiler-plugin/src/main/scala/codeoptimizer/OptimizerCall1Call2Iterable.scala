@@ -36,6 +36,6 @@ abstract class OptimizerCall1Call2Iterable(using Context):
           Select(ref(opsSym), methodSym.name),
           List(TypeTree(elementType))
         ),
-        List(call1Params.head, call2Params.head, seqExpr)
+        List(seqExpr, call1Params.head, call2Params.head)
       ).withSpan(tree.span)
     ).getOrElse(tree)

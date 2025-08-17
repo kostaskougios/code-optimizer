@@ -1,7 +1,7 @@
 package codeoptimizer
 
 object ListOps:
-  def filterMap[A, B](pred: A => Boolean, mapper: A => B, l: List[A]): List[B] =
+  def filterMap[A, B](l: List[A], pred: A => Boolean, mapper: A => B): List[B] =
     if l.isEmpty then Nil
     else
       var remain = l
@@ -13,14 +13,14 @@ object ListOps:
 
       b.result()
 
-  def withFilterForeach[A, U](pred: A => Boolean, f: A => U, l: List[A]): Unit =
+  def withFilterForeach[A, U](l: List[A], pred: A => Boolean, f: A => U): Unit =
     var these = l
     while !these.isEmpty do
       val h = these.head
       if pred(h) then f(h)
       these = these.tail
 
-  def filterForall[A](pred: A => Boolean, all: A => Boolean, l: List[A]): Boolean =
+  def filterForall[A](l: List[A], pred: A => Boolean, all: A => Boolean): Boolean =
     if l.isEmpty then true
     else
       var these = l

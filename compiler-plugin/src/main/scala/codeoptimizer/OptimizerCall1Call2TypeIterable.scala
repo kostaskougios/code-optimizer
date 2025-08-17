@@ -1,7 +1,6 @@
 package codeoptimizer
 
-import codeoptimizer.Utils.elementFirstType
-import codeoptimizer.Utils.reportOptimization
+import codeoptimizer.Utils.{elementFirstType, reportOptimization}
 import dotty.tools.dotc.*
 import dotty.tools.dotc.ast.Trees
 import dotty.tools.dotc.ast.tpd.*
@@ -38,6 +37,6 @@ abstract class OptimizerCall1Call2TypeIterable(using Context):
           Select(ref(opsSym), methodSym.name),
           List(TypeTree(elementType), call2Types.head)
         ),
-        List(call1Params.head, call2Params.head, seqExpr)
+        List(seqExpr, call1Params.head, call2Params.head)
       ).withSpan(tree.span)
     ).getOrElse(tree)
