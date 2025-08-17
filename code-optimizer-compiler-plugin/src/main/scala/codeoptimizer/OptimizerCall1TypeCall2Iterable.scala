@@ -1,7 +1,6 @@
 package codeoptimizer
 
-import codeoptimizer.Utils.elementFirstType
-import codeoptimizer.Utils.reportOptimization
+import codeoptimizer.Utils.{elementFirstType, reportOptimization}
 import dotty.tools.dotc.*
 import dotty.tools.dotc.ast.Trees
 import dotty.tools.dotc.ast.tpd.*
@@ -11,7 +10,7 @@ import dotty.tools.dotc.core.Names.*
 import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.core.Types.*
 
-abstract class OptimizerCall1Call2TypeIterable(using Context):
+abstract class OptimizerCall1TypeCall2Iterable(using Context):
   def method1: String
   def method2: String
   def replacement: String
@@ -23,8 +22,8 @@ abstract class OptimizerCall1Call2TypeIterable(using Context):
       tree: Apply,
       seqExpr: dotty.tools.dotc.ast.Trees.Tree[Type],
       call1Params: List[Trees.Tree[Type]],
-      call2Params: List[Trees.Tree[Type]],
-      call2Types: List[Trees.Tree[Type]]
+      call1Types: List[Trees.Tree[Type]],
+      call2Params: List[Trees.Tree[Type]]
   )(using Context): Apply =
     val ops = if seqExpr.tpe <:< ListClass then "ListOps" else if seqExpr.tpe <:< SeqClass then "SeqOps" else "IterableOps"
     (for elementType <- elementFirstType(seqExpr) yield
@@ -36,7 +35,7 @@ abstract class OptimizerCall1Call2TypeIterable(using Context):
       Apply(
         TypeApply(
           Select(ref(opsSym), methodSym.name),
-          List(TypeTree(elementType), call2Types.head)
+          List(TypeTree(elementType), call1Types.head)
         ),
         List(seqExpr, call1Params.head, call2Params.head)
       ).withSpan(tree.span)
