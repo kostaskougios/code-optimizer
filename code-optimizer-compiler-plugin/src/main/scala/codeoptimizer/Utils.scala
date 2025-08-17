@@ -5,9 +5,20 @@ import dotty.tools.dotc.core.Contexts.Context
 import dotty.tools.dotc.core.Types.*
 
 object Utils:
-  def elementFirstType(e: Tree[Type])(using Context): Option[Type] = e.tpe.widen match
-    case AppliedType(seqType, typeArgs) => Some(typeArgs.head)
-    case _                              => None
+  def elementFirstType(e: Tree[?])(using Context): Option[Type] =
+    e.tpe.widen match
+      case AppliedType(_, typeArgs) =>
+        Some(typeArgs.head)
+      case t                        =>
+        // look at its base types and see if one of them is an AppliedType
+        t.baseClasses.iterator
+          .flatMap { cls =>
+            t.baseType(cls) match
+              case AppliedType(_, typeArgs) => typeArgs.headOption
+              case _                        => None
+          }
+          .toList
+          .headOption
 
   def reportOptimization(clazz: Class[?], optimization: String, tree: Tree[?])(using ctx: Context): Unit =
     val pos        = tree.span
