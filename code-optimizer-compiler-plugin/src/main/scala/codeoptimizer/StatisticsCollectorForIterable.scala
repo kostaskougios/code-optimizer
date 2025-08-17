@@ -10,10 +10,12 @@ import dotty.tools.dotc.core.Names.Name
 import dotty.tools.dotc.core.Symbols.*
 import dotty.tools.dotc.core.Types.*
 
+import scala.annotation.tailrec
+
 class StatisticsCollectorForIterable(using Context) extends AbstractOptimizer:
   private val IterableClass = requiredClass("scala.collection.Iterable").typeRef.appliedTo(TypeBounds.empty)
 
-  private def collectStats(tree: Apply)(using Context): Unit =
+  @tailrec private def collectStats(tree: Apply)(using Context): Unit =
     tree match
       // 1nd call has type args
       case Apply(Select(Apply(TypeApply(Select(seqExpr, call1), call1Types), call1Params), call2), call2Params) if seqExpr.tpe <:< IterableClass =>
