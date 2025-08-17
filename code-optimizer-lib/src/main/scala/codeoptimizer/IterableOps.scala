@@ -1,5 +1,7 @@
 package codeoptimizer
 
+import codeoptimizer.Utils.notYetOptimized
+
 object IterableOps:
   def filterMap[A, B](xs: Iterable[A], pred: A => Boolean, mapper: A => B): Iterable[B] =
     xs match
@@ -11,8 +13,13 @@ object IterableOps:
       case s: Seq[A] => SeqOps.filterForall(s, pred, all)
       case _         => xs.filter(pred).forall(all)
 
+  private var withFilterForeachNotOptimized                                        = true
   def withFilterForeach[A, U](s: Iterable[A], pred: A => Boolean, f: A => U): Unit =
     s match
       case s: Seq[A] =>
         SeqOps.withFilterForeach(s, pred, f)
-      case x         => throw IllegalStateException(s"NYI withFilterForeach for ${x.getClass}")
+      case x         =>
+        if withFilterForeachNotOptimized then
+          withFilterForeachNotOptimized = false
+          notYetOptimized(x, "withFilterForeach")
+        s.withFilter(pred).foreach(f)
