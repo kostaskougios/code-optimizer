@@ -14,3 +14,7 @@ class DoesNotCorruptCodeTest extends AnyFunSuiteLike:
     var i = 0
     (1 to 5).toList.withFilter(_ > 2).foreach(i += _)
     i should be(3 + 4 + 5)
+
+  test("filterForall"):
+    (1 to 5).toList.filter(_ > 2).forall(_ > 2) should be(true)
+    (1 to 5).toList.filter(_ > 2).forall(_ < 2) should be(false)

@@ -66,5 +66,8 @@ def benchmark(): Unit =
     Timings.profile("withFilter-foreach-small"):
       lists.ListsBenchmark.runWithFilterForeachSmall()
 
+    Timings.profile("filter-forall-large"):
+      lists.ListsBenchmark.runFilterForallLarge()
+
     i += 1
     if i % 100 == 99 then println(Timings.profilingTable)

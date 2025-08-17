@@ -19,3 +19,6 @@ object ListOps:
       val h = these.head
       if pred(h) then f(h)
       these = these.tail
+
+  def filterForall[A](pred: A => Boolean, all: A => Boolean, l: List[A]): Boolean =
+    if l.isEmpty then true else ???

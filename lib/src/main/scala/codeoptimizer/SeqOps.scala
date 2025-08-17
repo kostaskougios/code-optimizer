@@ -5,6 +5,10 @@ object SeqOps:
     xs match
       case l: List[A] =>
         ListOps.filterMap(pred, mapper, l)
+      case x          => throw IllegalStateException(s"NYI filterMap for ${x.getClass}")
 
   def filterForall[A](pred: A => Boolean, all: A => Boolean, xs: Seq[A]): Boolean =
-    xs.iterator.filter(pred).forall(all)
+    xs match
+      case l: List[A] =>
+        ListOps.filterForall(pred, all, l)
+      case x          => throw IllegalStateException(s"NYI filterForall for ${x.getClass}")

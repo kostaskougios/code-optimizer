@@ -77,3 +77,14 @@ object ListsBenchmark:
       r = listOfThree.filter(_ >= 7).map(_ * 2)
       i += 1
     r
+
+  def runFilterForallLarge(): Boolean =
+    var i = 0
+    var b = false
+    while i < 2000 do
+      b = largeList
+        .filter(_ > 500)
+        .forall: i =>
+          i > 500
+      i += 1
+    b
