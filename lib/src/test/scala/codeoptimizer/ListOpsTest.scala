@@ -20,3 +20,8 @@ class ListOpsTest extends AnyFunSuiteLike:
         var sum2 = 0
         l.withFilter(_ >= j).foreach(sum2 += _)
         sum1 should be(sum2)
+
+      test(s"filterForall list of $i size and $j filter"):
+        val l = (0 until i).toList
+        ListOps.filterForall[Int](_ >= j, _ >= j, l) should be(true)
+        ListOps.filterForall[Int](_ >= j, _ < 0, l) should be(!l.exists(_ >= j))

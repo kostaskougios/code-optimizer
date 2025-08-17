@@ -21,4 +21,11 @@ object ListOps:
       these = these.tail
 
   def filterForall[A](pred: A => Boolean, all: A => Boolean, l: List[A]): Boolean =
-    if l.isEmpty then true else ???
+    if l.isEmpty then true
+    else
+      var these = l
+      while !these.isEmpty do
+        val h = these.head
+        if pred(h) && !all(h) then return false
+        these = these.tail
+      true
