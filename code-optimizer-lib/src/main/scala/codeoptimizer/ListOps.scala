@@ -29,3 +29,14 @@ object ListOps:
         if pred(h) && !all(h) then return false
         these = these.tail
       true
+
+  private var mapFindNotOptimized                                              = true
+  def mapFind[A, B](l: List[A], mapper: A => B, pred: B => Boolean): Option[B] =
+    if l.isEmpty then None
+    else
+      var these = l
+      while !these.isEmpty do
+        val h = mapper(these.head)
+        if pred(h) then return Some(h)
+        these = these.tail
+      None

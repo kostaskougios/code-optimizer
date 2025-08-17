@@ -25,3 +25,8 @@ class ListOpsTest extends AnyFunSuiteLike:
         val l = (0 until i).toList
         ListOps.filterForall[Int](l, _ >= j, _ >= j) should be(true)
         ListOps.filterForall[Int](l, _ >= j, _ < 0) should be(!l.exists(_ >= j))
+
+      test(s"mapFind list of $i size and $j find"):
+        val l        = (0 until i).toList
+        val expected = if i == 0 || j >= i then None else Some(j * 2)
+        ListOps.mapFind(l, _ * 2, _ == j * 2) should be(expected)

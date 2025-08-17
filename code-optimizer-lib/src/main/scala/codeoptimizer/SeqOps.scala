@@ -35,3 +35,14 @@ object SeqOps:
           withFilterForeachNotOptimized = false
           notYetOptimized(x, "withFilterForeach")
         s.withFilter(pred).foreach(f)
+
+  private var mapFindNotOptimized                                             = true
+  def mapFind[A, B](s: Seq[A], mapper: A => B, pred: B => Boolean): Option[B] =
+    s match
+      case l: List[A] =>
+        ListOps.mapFind(l, mapper, pred)
+      case x          =>
+        if mapFindNotOptimized then
+          mapFindNotOptimized = true
+          notYetOptimized(x, "mapFind")
+        s.map(mapper).find(pred)
