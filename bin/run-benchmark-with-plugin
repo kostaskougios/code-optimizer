@@ -1,1 +1,1 @@
-sbt -DenablePlugin=true "clean ; compiler-plugin/assembly; test-project/test ; test-project/run"
+sbt -DenablePlugin=true "clean ; code-optimizer-compiler-plugin/assembly; test-project/test ; test-project/run"

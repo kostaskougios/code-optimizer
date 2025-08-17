@@ -12,7 +12,7 @@ ThisBuild / version      := CompilerPluginVersion
 val ScalaTest = "org.scalatest"     %% "scalatest" % "3.2.19" % Test
 val Layoutz   = "xyz.matthieucourt" %% "layoutz"   % "0.1.0"
 
-lazy val `compiler-plugin` = project
+lazy val `code-optimizer-compiler-plugin` = project
   .settings(
     libraryDependencies ++= Seq(
       "org.scala-lang" %% "scala3-compiler" % scalaVersion.value % Provided,
@@ -30,7 +30,7 @@ lazy val `compiler-plugin` = project
 
 lazy val enableCompilerPlugin = settingKey[Boolean]("Enable the compiler plugin")
 
-lazy val lib = project
+lazy val `code-optimizer-lib` = project
   .settings(
     libraryDependencies ++= Seq(
       ScalaTest
@@ -47,10 +47,10 @@ lazy val `test-project` = project
     scalacOptions ++= {
       if (enableCompilerPlugin.value)
         Seq(
-          s"-Xplugin:compiler-plugin/target/scala-$MyScalaVersion/compiler-plugin-assembly-$CompilerPluginVersion.jar"
+          s"-Xplugin:code-optimizer-compiler-plugin/target/scala-$MyScalaVersion/code-optimizer-compiler-plugin-assembly-$CompilerPluginVersion.jar"
         )
       else Nil
     },
     run / fork           := true
   )
-  .dependsOn(lib)
+  .dependsOn(`code-optimizer-lib`)
