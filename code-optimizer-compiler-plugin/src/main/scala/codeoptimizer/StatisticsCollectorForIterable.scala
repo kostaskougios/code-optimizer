@@ -15,15 +15,24 @@ class StatisticsCollectorForIterable(using Context) extends AbstractOptimizer:
 
   private def collectStats(tree: Apply)(using Context): Unit =
     tree match
+      // 1nd call has type args
+      case Apply(Select(Apply(TypeApply(Select(seqExpr, call1), call1Params), call1Types), call2), call2Params) if seqExpr.tpe <:< IterableClass =>
+        recordStats(seqExpr, List(call1, call2))
+
+      // 2st call has type arg
       case Apply(TypeApply(Select(Apply(Select(seqExpr, call1), call1Params), call2), call2Types), call2Params) if seqExpr.tpe <:< IterableClass =>
         recordStats(seqExpr, List(call1, call2))
-      case Apply(
-            Select(Apply(Select(seqExpr, call1), call1Params), call2),
-            call2Params
-          ) if seqExpr.tpe <:< IterableClass =>
+      // both calls have type args
+      case Apply(TypeApply(Select(Apply(TypeApply(Select(seqExpr, call1), call1Params), call1Types), call2), call2Types), call2Params)
+          if seqExpr.tpe <:< IterableClass =>
         recordStats(seqExpr, List(call1, call2))
-      case Apply(Select(app: Apply, call), callParams) => collectStats(app)
 
+      // no calls have type args
+      case Apply(Select(Apply(Select(seqExpr, call1), call1Params), call2), call2Params) if seqExpr.tpe <:< IterableClass =>
+        recordStats(seqExpr, List(call1, call2))
+
+      // Calls that might be before iterable calls.
+      case Apply(Select(app: Apply, call), callParams)                       => collectStats(app)
       case Apply(TypeApply(Select(app: Apply, call), callTypes), callParams) => collectStats(app)
       case _                                                                 =>
 
