@@ -15,8 +15,9 @@ class StatisticsCollectorForIterable(using Context) extends AbstractOptimizer:
 
   private def collectStats(tree: Apply)(using Context): Unit =
     tree match
-      case seqApply @ Apply(TypeApply(Select(Apply(Select(seqExpr, call1), call1Params), call2), call2Types), call2Params) if seqExpr.tpe <:< IterableClass =>
-      case seqApply @ Apply(
+      case Apply(TypeApply(Select(Apply(Select(seqExpr, call1), call1Params), call2), call2Types), call2Params) if seqExpr.tpe <:< IterableClass =>
+        recordStats(seqExpr, List(call1, call2))
+      case Apply(
             Select(Apply(Select(seqExpr, call1), call1Params), call2),
             call2Params
           ) if seqExpr.tpe <:< IterableClass =>
