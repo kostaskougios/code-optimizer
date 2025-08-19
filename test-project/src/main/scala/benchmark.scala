@@ -84,8 +84,10 @@ def benchmark(): Unit =
 //    Timings.profile("list-map-find-small"):
 //      benchmarks.ListsBenchmark.runMapFindSmall()
 
-    Timings.profile("iterable-filter-map-small"):
-      benchmarks.IterableBenchmarks.runFilterMapSmall()
+//    Timings.profile("iterable-filter-map-small"):
+//      benchmarks.IterableBenchmarks.runFilterMapSmall()
+    Timings.profile("iterable-filter-forall-small"):
+      benchmarks.IterableBenchmarks.runFilterForAllSmall()
 
     i += 1
     if i % 100 == 99 then println(Timings.profilingTable)

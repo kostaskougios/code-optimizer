@@ -11,3 +11,11 @@ object IterableBenchmarks:
       r = iterableSmall.filter(_ >= 2).map(_ * 2)
       i += 1
     r
+
+  def runFilterForAllSmall(): Boolean =
+    var i = 0
+    var b = false
+    while i < 300000 do
+      b = iterableSmall.filter(_ >= 2).forall(_ < 50)
+      i += 1
+    b
