@@ -6,7 +6,14 @@ import scala.collection.immutable.IntMap
 
 class IterableOpsTest extends AnyFunSuiteLike:
   val iterable1 = IntMap(1 -> 10, 2 -> 20, 3 -> 30).values // create a non-list iterable
+
   test("filterMap"):
     IterableOps.filterMap(iterable1, _ > 1, _ * 2) should be(Iterable(20, 40, 60))
     IterableOps.filterMap(iterable1, _ > 10, _ * 2) should be(Iterable(40, 60))
     IterableOps.filterMap(iterable1, _ > 40, _ * 2) should be(Iterable.empty)
+
+  test("filterForall"):
+    IterableOps.filterForall(iterable1, _ > 10, _ > 10) should be(true)
+    IterableOps.filterForall(iterable1, _ > 10, _ < 30) should be(false)
+    IterableOps.filterForall(iterable1, _ > 10, _ <= 20) should be(false)
+    IterableOps.filterForall(iterable1, _ > 100, _ <= 200) should be(true)

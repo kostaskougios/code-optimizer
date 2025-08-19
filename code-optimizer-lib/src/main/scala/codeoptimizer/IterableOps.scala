@@ -17,7 +17,12 @@ object IterableOps:
   def filterForall[A](xs: Iterable[A], pred: A => Boolean, all: A => Boolean): Boolean =
     xs match
       case s: Seq[A] => SeqOps.filterForall(s, pred, all)
-      case _         => xs.filter(pred).forall(all)
+      case _         =>
+        val it = xs.iterator
+        while it.hasNext do
+          val a = it.next()
+          if pred(a) && !all(a) then return false
+        true
 
   private var withFilterForeachNotOptimized                                        = true
   def withFilterForeach[A, U](s: Iterable[A], pred: A => Boolean, f: A => U): Unit =
