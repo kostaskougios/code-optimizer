@@ -1,4 +1,4 @@
-package lists
+package benchmarks
 
 object ListsBenchmark:
   private val largeList   = (1 to 1000).toList
@@ -38,7 +38,7 @@ object ListsBenchmark:
       i += 1
     r
 
-  def runFilterMapSmallList(): List[Int] =
+  def runFilterMapSmall(): List[Int] =
     var i = 0
     var r = List.empty[Int]
     while i < 300000 do

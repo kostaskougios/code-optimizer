@@ -1,0 +1,13 @@
+package benchmarks
+import scala.collection.immutable.IntMap
+
+object IterableBenchmarks:
+  val iterableSmall = IntMap(1 -> 10, 2 -> 20, 3 -> 30).values // create a non-list iterable
+
+  def runFilterMapSmall(): Iterable[Int] =
+    var i = 0
+    var r = Iterable.empty[Int]
+    while i < 300000 do
+      r = iterableSmall.filter(_ >= 2).map(_ * 2)
+      i += 1
+    r

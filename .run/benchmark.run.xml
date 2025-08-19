@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="benchmark" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="benchmark" />
+    <module name="test-project" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+      <option name="BSP.BeforeRunTask" enabled="true" CHOSEN_TARGET="file:$PROJECT_DIR$/#test-project/Compile" />
+    </method>
+  </configuration>
+</component>

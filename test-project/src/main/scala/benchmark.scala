@@ -56,33 +56,36 @@ With plugin:
 def benchmark(): Unit =
   var i = 0
   while true do
-    Timings.profile("filter-map-large"):
-      lists.ListsBenchmark.runFilterMapLarge()
-    Timings.profile("filter-map-small"):
-      lists.ListsBenchmark.runFilterMapSmallList()
-    Timings.profile("filter-map-empty"):
-      lists.ListsBenchmark.runFilterMapEmptyList()
-    Timings.profile("filter-map-one"):
-      lists.ListsBenchmark.runFilterMapListOfOne()
-    Timings.profile("filter-map-two"):
-      lists.ListsBenchmark.runFilterMapListOfTwo()
-    Timings.profile("filter-map-three"):
-      lists.ListsBenchmark.runFilterMapListOfThree()
+//    Timings.profile("list-filter-map-large"):
+//      benchmarks.ListsBenchmark.runFilterMapLarge()
+//    Timings.profile("list-filter-map-small"):
+//      benchmarks.ListsBenchmark.runFilterMapSmall()
+//    Timings.profile("list-filter-map-empty"):
+//      benchmarks.ListsBenchmark.runFilterMapEmptyList()
+//    Timings.profile("list-filter-map-one"):
+//      benchmarks.ListsBenchmark.runFilterMapListOfOne()
+//    Timings.profile("list-filter-map-two"):
+//      benchmarks.ListsBenchmark.runFilterMapListOfTwo()
+//    Timings.profile("list-filter-map-three"):
+//      benchmarks.ListsBenchmark.runFilterMapListOfThree()
+//
+//    Timings.profile("list-withFilter-foreach-large"):
+//      benchmarks.ListsBenchmark.runWithFilterForeachLarge()
+//    Timings.profile("list-withFilter-foreach-small"):
+//      benchmarks.ListsBenchmark.runWithFilterForeachSmall()
+//
+//    Timings.profile("list-filter-forall-large"):
+//      benchmarks.ListsBenchmark.runFilterForallLarge()
+//    Timings.profile("list-filter-forall-small"):
+//      benchmarks.ListsBenchmark.runFilterForallSmall()
+//
+//    Timings.profile("list-map-find-large"):
+//      benchmarks.ListsBenchmark.runMapFindLarge()
+//    Timings.profile("list-map-find-small"):
+//      benchmarks.ListsBenchmark.runMapFindSmall()
 
-    Timings.profile("withFilter-foreach-large"):
-      lists.ListsBenchmark.runWithFilterForeachLarge()
-    Timings.profile("withFilter-foreach-small"):
-      lists.ListsBenchmark.runWithFilterForeachSmall()
-
-    Timings.profile("filter-forall-large"):
-      lists.ListsBenchmark.runFilterForallLarge()
-    Timings.profile("filter-forall-small"):
-      lists.ListsBenchmark.runFilterForallSmall()
-
-    Timings.profile("map-find-large"):
-      lists.ListsBenchmark.runMapFindLarge()
-    Timings.profile("map-find-small"):
-      lists.ListsBenchmark.runMapFindSmall()
+    Timings.profile("iterable-filter-map-small"):
+      benchmarks.IterableBenchmarks.runFilterMapSmall()
 
     i += 1
     if i % 100 == 99 then println(Timings.profilingTable)
