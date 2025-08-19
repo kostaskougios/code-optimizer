@@ -29,10 +29,10 @@ object IterableOps:
       case s: Seq[A] =>
         SeqOps.withFilterForeach(s, pred, f)
       case x         =>
-        val it = s.iterator
+        val it = s.iterator.withFilter(pred)
         while it.hasNext do
           val a = it.next()
-          if pred(a) then f(a)
+          f(a)
 
   private var mapFindNotOptimized                                                  = true
   def mapFind[A, B](s: Iterable[A], mapper: A => B, pred: B => Boolean): Option[B] =
