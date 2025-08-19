@@ -24,16 +24,15 @@ object IterableOps:
           if pred(a) && !all(a) then return false
         true
 
-  private var withFilterForeachNotOptimized                                        = true
   def withFilterForeach[A, U](s: Iterable[A], pred: A => Boolean, f: A => U): Unit =
     s match
       case s: Seq[A] =>
         SeqOps.withFilterForeach(s, pred, f)
       case x         =>
-        if withFilterForeachNotOptimized then
-          withFilterForeachNotOptimized = false
-          notYetOptimized(x, "withFilterForeach")
-        s.withFilter(pred).foreach(f)
+        val it = s.iterator
+        while it.hasNext do
+          val a = it.next()
+          if pred(a) then f(a)
 
   private var mapFindNotOptimized                                                  = true
   def mapFind[A, B](s: Iterable[A], mapper: A => B, pred: B => Boolean): Option[B] =

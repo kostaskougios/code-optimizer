@@ -17,3 +17,8 @@ class IterableOpsTest extends AnyFunSuiteLike:
     IterableOps.filterForall(iterable1, _ > 10, _ < 30) should be(false)
     IterableOps.filterForall(iterable1, _ > 10, _ <= 20) should be(false)
     IterableOps.filterForall(iterable1, _ > 100, _ <= 200) should be(true)
+
+  test("filterForeach"):
+    var r = 0
+    IterableOps.withFilterForeach(iterable1, _ >= 20, r += _)
+    r should be(50)

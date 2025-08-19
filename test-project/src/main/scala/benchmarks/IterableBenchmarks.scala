@@ -19,3 +19,11 @@ object IterableBenchmarks:
       b = iterableSmall.filter(_ >= 2).forall(_ < 50)
       i += 1
     b
+
+  def runWithFilterForeachSmall(): Int =
+    var i = 0
+    var r = 0
+    while i < 300000 do
+      iterableSmall.withFilter(_ >= 2).foreach(r += _ * 2)
+      i += 1
+    r
