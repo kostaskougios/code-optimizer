@@ -89,7 +89,7 @@ def benchmark(): Unit =
 //    Timings.profile("iterable-filter-forall-small"):
 //      benchmarks.IterableBenchmarks.runFilterForAllSmall()
 
-    Timings.profile("iterable-filter-foreach-small"):
+    Timings.profile("iterable-withFilter-foreach-small"):
       benchmarks.IterableBenchmarks.runWithFilterForeachSmall()
 
     i += 1

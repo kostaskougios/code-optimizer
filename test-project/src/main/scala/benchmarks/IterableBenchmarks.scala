@@ -23,7 +23,7 @@ object IterableBenchmarks:
   def runWithFilterForeachSmall(): Int =
     var i = 0
     var r = 0
-    while i < 300000 do
+    while i < 900000 do
       iterableSmall.withFilter(_ >= 2).foreach(r += _ * 2)
       i += 1
     r
