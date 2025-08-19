@@ -6,7 +6,13 @@ object IterableOps:
   def filterMap[A, B](xs: Iterable[A], pred: A => Boolean, mapper: A => B): Iterable[B] =
     xs match
       case s: Seq[A] => SeqOps.filterMap(s, pred, mapper)
-      case _         => xs.filter(pred).map(mapper).to(Iterable)
+      case _         =>
+        val it = xs.iterator
+        val b  = List.newBuilder[B]
+        while it.hasNext do
+          val a = it.next()
+          if pred(a) then b += mapper(a)
+        b.result()
 
   def filterForall[A](xs: Iterable[A], pred: A => Boolean, all: A => Boolean): Boolean =
     xs match
