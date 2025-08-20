@@ -30,7 +30,6 @@ object ListOps:
         these = these.tail
       true
 
-  private var mapFindNotOptimized                                              = true
   def mapFind[A, B](l: List[A], mapper: A => B, pred: B => Boolean): Option[B] =
     if l.isEmpty then None
     else
