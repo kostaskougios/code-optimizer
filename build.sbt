@@ -1,7 +1,7 @@
 import sbtassembly.AssemblyPlugin
 
 val MyScalaVersion        = "3.7.2"
-val CompilerPluginVersion = "0.1.0"
+val CompilerPluginVersion = "0.1.0-SNAPSHOT"
 
 ThisBuild / scalaVersion := MyScalaVersion
 
