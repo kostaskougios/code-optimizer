@@ -30,3 +30,6 @@ class DoesNotCorruptCodeTest extends AnyFunSuiteLike:
     (1 to 10).toList.map(_ * 2).find(_ == 10) should be(Some(10))
     (1 to 10).toList.map(_ * 2).find(_ == 11) should be(None)
     List.empty[Int].map(_ * 2).find(_ == 11) should be(None)
+
+  test("iterator runtime class-cast issue"):
+    Iterator(1, 2, 3).map(_ * 2).find(_ == 4) should be(Some(4))

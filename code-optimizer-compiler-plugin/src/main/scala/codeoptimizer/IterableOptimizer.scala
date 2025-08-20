@@ -34,7 +34,7 @@ class IterableOptimizer(using Context) extends AbstractOptimizer:
             (true, optimizer.transformApply(seqApply, seqExpr, call1Params, call2Params, call2Types))
           .getOrElse((false, tree))
       // seq . call1 [X] . call2
-      case seqApply @ Apply(Select(Apply(TypeApply(Select(seqExpr, call1), call1Types), call1Params), call2), call2Params)                                  =>
+      case seqApply @ Apply(Select(Apply(TypeApply(Select(seqExpr, call1), call1Types), call1Params), call2), call2Params) if seqExpr.tpe <:< IterableClass =>
         iterableDotCall1TypeDotCall2Optimizers
           .get((call1.mangledString, call2.mangledString))
           .map: optimizer =>
