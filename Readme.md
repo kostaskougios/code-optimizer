@@ -1,10 +1,64 @@
-run
-`sbt assembly`
+# Scala 3 compiler plugin to optimize collection chained calls
+This is a scala 3 compiler plugin and a small library. The purpose of it is to optimize collection calls like `seq.filter().map()` to
+a single call that will optimize the call and skip extra collection creation and be faster.
 
-then add the generated jar as a scalac plugin to your scala 3 project, i.e.
+## Using the plugin
+
+Currently, nothing is published to nexus, so you'll have to checkout the plugin:
+
+run
+```
+git clone https://github.com/kostaskougios/code-optimizer.git
+cd code-optimizer
+bin/build-plugin-and-publishlocal-lib
+```
+
+This will build the plugin and also publish locally the small library, `code-optimizer-lib`, that replaces chained calls.
+
+### Adding the plugin to your project
+then add the generated jar as a scalac plugin to your scala 3 project, i.e. (replace $FULLPATH with the full path where the plugin directory is)
 
 ```
 ThisBuild / scalacOptions ++= Seq(
-  "-Xplugin:/Users/**USER**/projects/code-optimizer/target/scala-3.7.2/compiler-plugin-assembly-0.1.0.jar"
+  "-Xplugin: $FULLPATH/code-optimizer/target/scala-3.7.2/compiler-plugin-assembly-0.1.0.jar"
 )
 ```
+
+Also add the library to your project, i.e. in your `build.sbt`:
+
+```
+libraryDependencies += "org.kkougios" %% "code-optimizer-lib" % "0.1.0"
+```
+
+And you're good to go. 
+
+### Compiling your code
+
+Try clean compiling your code, and you should see some output from the plugin. It will print which calls were optimized like:
+
+```
+[FilterMapOptimizer] Optimizing filter→map to IterableOps.filterMap at BattleReplay.scala:22
+```
+
+Also it will print where it found potential optimizable chained calls. For some of them the optimization will be performed straight away, so you will see
+a msg from `[FilterMapOptimizer]` but if you don't see that msg it means the optimization is not yet implemented (your code will work fine).
+```
+[StatisticsCollectorForIterable] List.find.map at BuildCost.scala:13
+```
+At the end of the compilation it will print statistics of frequency of chained calls:
+
+```
+┌────────────────────────────────┬───────┐
+│ Name                           │ Count │
+├────────────────────────────────┼───────┤
+│ Seq.$plus$plus.$plus$plus      │ 14    │
+│ List.map.sum                   │ 13    │
+│ List.map.maxOption             │ 11    │
+│ List.maxOption.getOrElse       │ 9     │
+│ List.map.mkString              │ 8     │
+│ List.filter.map                │ 8     │
+│ Seq.withFilter.map             │ 5     │
+│ List.$plus$plus.$plus$plus     │ 4     │
+```
+
+So in my code seq.++().++() is found 14 times. You can report these to me if you want so that I can plan some extra chained call optimizations (maybe this plugin will also expanded to 3 chained calls).
