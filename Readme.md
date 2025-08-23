@@ -2,6 +2,24 @@
 This is a scala 3 compiler plugin and a small library. The purpose of it is to optimize collection calls like `seq.filter().map()` to
 a single call that will optimize the call and skip extra collection creation and be faster.
 
+## micro-benchmark results
+
+I wrote a micro benchmark which compares performance of chained calls i.e. `seq.filter().map()` to the replacement single call (in this case to `SeqOps.filterMap`) and
+both there is a speed increase and garbage generation decrease. For the micro-benchmarks that it just has very simple logic in the `filter()` and `map()`, this results
+in sometimes multiples of performance increase and less GC magnify that. For real time application, the cost of the filter & map lambdas will reduce the benefits of the plugin, 
+but still it may result in good gains for parts of the code with simple code logic in those lambdas.
+
+## What is optimized right now?
+
+These:
+
+```
+iterable.filter(...).map(...)
+iterable.filter(...).forall(...)
+iterable.withFilter(...).foreach(...)
+list.map(...).find(...)
+```
+
 ## Using the plugin
 
 Currently, nothing is published to nexus, so you'll have to checkout the plugin:
