@@ -19,6 +19,7 @@ iterable.filter(...).forall(...)
 iterable.withFilter(...).foreach(...)
 list.map(...).find(...)
 ```
+(note: iterable includes seq and list, most seq optimizations are only on lists which is the default class when creating a seq)
 
 ## Using the plugin
 
