@@ -6,7 +6,7 @@ a single call that will optimize the call and skip extra collection creation and
 
 I wrote a micro benchmark which compares performance of chained calls i.e. `seq.filter().map()` to the replacement single call (in this case to `SeqOps.filterMap`) and
 both there is a speed increase and garbage generation decrease. For the micro-benchmarks that it just has very simple logic in the `filter()` and `map()`, this results
-in sometimes multiples of performance increase and less GC magnify that. For real time application, the cost of the filter & map lambdas will reduce the benefits of the plugin, 
+in sometimes multiples of performance increase and having less garbage collections magnify that. For real time application, the cost of the filter & map lambdas will reduce the benefits of the plugin, 
 but still it may result in good gains for parts of the code with simple code logic in those lambdas.
 
 ## What is optimized right now?
