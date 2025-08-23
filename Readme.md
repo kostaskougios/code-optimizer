@@ -85,5 +85,5 @@ So in my code seq.++().++() is found 14 times. You can report these to me if you
 
 ## Things to be aware of
 
-Some optimizations are not equivalent to their original chained call. I.e. ```list.map().find()``` will not map all elements of the list before calling find. It will map until it finds the first
+Some optimizations are not equivalent to their original chained call. I.e. ```list.map().find()``` is rewritten to `ListOps.mapFind` which will not map all elements of the list before calling find. It will map until it finds the first
 result and then stop. This will affect code that has side effects in the map part but no-side effect code should work fine.
