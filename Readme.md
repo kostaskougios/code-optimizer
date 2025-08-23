@@ -35,7 +35,7 @@ bin/build-plugin-and-publishlocal-lib
 This will build the plugin and also publish locally the small library, `code-optimizer-lib`, that replaces chained calls.
 
 ### Adding the plugin to your project
-then add the generated jar as a scalac plugin to your scala 3 project, i.e. (replace $FULLPATH with the full path where the plugin directory is)
+Then add the generated jar as a scalac plugin to your scala 3 project, i.e. (replace $FULLPATH with the full path where the plugin directory is)
 
 ```
 ThisBuild / scalacOptions ++= Seq(
