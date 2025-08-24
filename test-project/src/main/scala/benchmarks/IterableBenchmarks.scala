@@ -2,7 +2,7 @@ package benchmarks
 import scala.collection.immutable.IntMap
 
 object IterableBenchmarks:
-  val iterableSmall = IntMap(1 -> 10, 2 -> 20, 3 -> 30).values // create a non-list iterable
+  private val iterableSmall = IntMap(1 -> 10, 2 -> 20, 3 -> 30).values // create a non-list iterable
 
   def runFilterMapSmall(): Iterable[Int] =
     var i = 0
