@@ -14,6 +14,17 @@ object IterableOps:
           if pred(a) then b += mapper(a)
         b.result()
 
+  def mapFilter[A, B](xs: Iterable[A], mapper: A => B, pred: B => Boolean): Iterable[B] =
+    xs match
+      case s: Seq[A] => SeqOps.mapFilter(s, mapper, pred)
+      case _         =>
+        val it = xs.iterator
+        val b  = List.newBuilder[B]
+        while it.hasNext do
+          val a = mapper(it.next())
+          if pred(a) then b += a
+        b.result()
+
   def filterForall[A](xs: Iterable[A], pred: A => Boolean, all: A => Boolean): Boolean =
     xs match
       case s: Seq[A] => SeqOps.filterForall(s, pred, all)

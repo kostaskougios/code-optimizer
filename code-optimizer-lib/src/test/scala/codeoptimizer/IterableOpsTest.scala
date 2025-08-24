@@ -1,10 +1,17 @@
 package codeoptimizer
-import org.scalatest.funsuite.AnyFunSuiteLike
 import org.scalatest.matchers.should.Matchers.*
 
 import scala.collection.immutable.IntMap
 
-class IterableOpsTest extends AnyFunSuiteLike:
+class IterableOpsTest extends AbstractIterableTest[Iterable[Int]]("Iterable"):
+  override def filterMap(l: Iterable[Int], pred: Int => Boolean, mapper: Int => Int)           = IterableOps.filterMap(l, pred, mapper)
+  override def mapFilter(l: Iterable[Int], mapper: Int => Int, pred: Int => Boolean)           = IterableOps.mapFilter(l, mapper, pred)
+  override def withFilterForeach(l: Iterable[Int], pred: Int => Boolean, f: Int => Unit): Unit = IterableOps.withFilterForeach(l, pred, f)
+  override def filterForall(l: Iterable[Int], pred: Int => Boolean, all: Int => Boolean)       = IterableOps.filterForall(l, pred, all)
+  override def mapFind(l: Iterable[Int], mapper: Int => Int, pred: Int => Boolean)             = IterableOps.mapFind(l, mapper, pred)
+
+  override def createIterable(i: Int): Iterable[Int] = (0 until i).map(j => j -> j).toMap.values // make sure we get an iterable and not a seq
+
   val iterable1 = IntMap(1 -> 10, 2 -> 20, 3 -> 30).values // create a non-list iterable
 
   test("filterMap"):
