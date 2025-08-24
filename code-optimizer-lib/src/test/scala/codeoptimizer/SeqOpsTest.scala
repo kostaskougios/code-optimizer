@@ -1,8 +1,5 @@
 package codeoptimizer
 
-import org.scalatest.funsuite.AnyFunSuiteLike
-import org.scalatest.matchers.should.Matchers.*
-
 class SeqOpsTest extends AbstractIterableTest[Seq[Int]]("Seq"):
   override def filterMap(l: Seq[Int], pred: Int => Boolean, mapper: Int => Int)           = SeqOps.filterMap(l, pred, mapper)
   override def mapFilter(l: Seq[Int], mapper: Int => Int, pred: Int => Boolean)           = SeqOps.mapFilter(l, mapper, pred)
@@ -11,3 +8,6 @@ class SeqOpsTest extends AbstractIterableTest[Seq[Int]]("Seq"):
   override def mapFind(l: Seq[Int], mapper: Int => Int, pred: Int => Boolean)             = SeqOps.mapFind(l, mapper, pred)
 
   override def createIterable(i: Int): Seq[Int] = (0 until i).toVector
+
+class SeqOpsButForListTest extends SeqOpsTest:
+  override def createIterable(i: Int): Seq[Int] = (0 until i).toList
