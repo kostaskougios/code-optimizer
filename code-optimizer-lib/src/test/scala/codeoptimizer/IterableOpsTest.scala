@@ -29,3 +29,6 @@ class IterableOpsTest extends AbstractIterableTest[Iterable[Int]]("Iterable"):
     var r = 0
     IterableOps.withFilterForeach(iterable1, _ >= 20, r += _)
     r should be(50)
+
+class IterableButSeqOpsTest extends IterableOpsTest:
+  override def createIterable(i: Int): Iterable[Int] = (0 until i).toList
