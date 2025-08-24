@@ -4,10 +4,24 @@ a single call that will optimize the call and skip extra collection creation and
 
 ## micro-benchmark results
 
-I wrote a micro benchmark which compares performance of chained calls i.e. `seq.filter().map()` to the replacement single call (in this case to `SeqOps.filterMap`) and
+I wrote a micro benchmark which compares performance of chained calls, i.e. `seq.filter().map()`, to the replacement single call (in this case to `SeqOps.filterMap`) and
 both there is a speed increase and garbage generation decrease. For the micro-benchmarks that it just has very simple logic in the `filter()` and `map()`, this results
 in sometimes multiples of performance increase and having less garbage collections magnify that. For real time application, the cost of the filter & map lambdas will reduce the benefits of the plugin, 
 but still it may result in good gains for parts of the code with simple code logic in those lambdas.
+
+## GC impact
+
+Because these chained calls are transformed to 1 call, intermediate collection creation is skipped and this has an effect
+in the number of garbage that are generated at runtime.
+
+In a project of mine, I've a stress test for some parts of the code. This is the pattern of memory usage without the plugin:
+
+![without plugin](./wiki/memory-usage-without-plugin.png)
+
+and with the plugin:
+
+![with plugin](./wiki/memory-usage-with-plugin.png)
+
 
 ## What is optimized right now?
 
