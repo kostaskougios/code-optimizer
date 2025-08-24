@@ -119,3 +119,19 @@ object ListsBenchmark:
         .find(_ == 6)
       i += 1
     b
+
+  def runMapFilterLarge(): List[Int] =
+    var i = 0
+    var r = List.empty[Int]
+    while i < 1000 do
+      r = largeList.map(_ * 2).filter(_ > 500)
+      i += 1
+    r
+
+  def runMapFilterSmall(): List[Int] =
+    var i = 0
+    var r = List.empty[Int]
+    while i < 300000 do
+      r = smallList.map(_ * 2).filter(_ >= 2)
+      i += 1
+    r

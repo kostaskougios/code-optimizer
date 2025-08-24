@@ -17,7 +17,7 @@ class IterableOptimizer(using Context) extends AbstractOptimizer:
       ((o.method1, o.method2), o)
     .toMap
 
-  private val iterableDotCall1TypeDotCall2Optimizers = List(MapFindOptimizer())
+  private val iterableDotCall1TypeDotCall2Optimizers = List(MapFindOptimizer(), MapFilterOptimizer())
     .map: o =>
       ((o.method1, o.method2), o)
     .toMap

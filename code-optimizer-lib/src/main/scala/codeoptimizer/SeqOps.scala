@@ -14,6 +14,17 @@ object SeqOps:
           notYetOptimized(x, "filterMap")
         xs.filter(pred).map(mapper)
 
+  private var mapFilterNotOptimized                                           = true
+  def mapFilter[A, B](xs: Seq[A], mapper: A => B, pred: B => Boolean): Seq[B] =
+    xs match
+      case l: List[A] =>
+        ListOps.mapFilter(l, mapper, pred)
+      case x          =>
+        if mapFilterNotOptimized then
+          mapFilterNotOptimized = false
+          notYetOptimized(x, "filterMap")
+        xs.map(mapper).filter(pred)
+
   private var filterForallNotOptimized                                            = true
   def filterForall[A](xs: Seq[A], pred: A => Boolean, all: A => Boolean): Boolean =
     xs match

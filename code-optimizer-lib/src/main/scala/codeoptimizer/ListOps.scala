@@ -13,6 +13,18 @@ object ListOps:
 
       b.result()
 
+  def mapFilter[A, B](l: List[A], mapper: A => B, pred: B => Boolean): List[B] =
+    if l.isEmpty then Nil
+    else
+      var remain = l
+      val b      = List.newBuilder[B]
+      while !(remain eq Nil) do
+        val h = mapper(remain.head)
+        if pred(h) then b += h
+        remain = remain.tail
+
+      b.result()
+
   def withFilterForeach[A, U](l: List[A], pred: A => Boolean, f: A => U): Unit =
     var these = l
     while !these.isEmpty do
