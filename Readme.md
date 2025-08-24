@@ -29,6 +29,7 @@ These:
 
 ```
 iterable.filter(...).map(...)
+iterable.map(...).filter(...)
 iterable.filter(...).forall(...)
 iterable.withFilter(...).foreach(...)
 list.map(...).find(...)
