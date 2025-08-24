@@ -1,37 +1,10 @@
 package codeoptimizer
 
-import org.scalatest.funsuite.AnyFunSuiteLike
-import org.scalatest.matchers.should.Matchers.*
+class ListOpsTest extends AbstractIterableTest[List[Int]]("List"):
+  override def filterMap(l: List[Int], pred: Int => Boolean, mapper: Int => Int): List[Int] = ListOps.filterMap(l, pred, mapper)
+  def mapFilter(l: List[Int], mapper: Int => Int, pred: Int => Boolean)                     = ListOps.mapFilter(l, mapper, pred)
+  def withFilterForeach(l: List[Int], pred: Int => Boolean, f: Int => Unit): Unit           = ListOps.withFilterForeach(l, pred, f)
+  def filterForall(l: List[Int], pred: Int => Boolean, all: Int => Boolean)                 = ListOps.filterForall(l, pred, all)
+  def mapFind(l: List[Int], mapper: Int => Int, pred: Int => Boolean)                       = ListOps.mapFind(l, mapper, pred)
 
-class ListOpsTest extends AnyFunSuiteLike:
-  for i <- 0 to 10 do
-    for j <- 0 to i + 1 do
-      test(s"filterMap list of $i size and $j filter"):
-        val l    = (0 until i).toList
-        val lops = ListOps.filterMap[Int, Int](l, _ >= j, _ * 2)
-        val n    = l.filter(_ >= j).map(_ * 2)
-        lops should be(n)
-
-      test(s"mapFilter list of $i size and $j filter"):
-        val l    = (0 until i).toList
-        val lops = ListOps.mapFilter[Int, Int](l, _ * 2, _ >= j * 2)
-        val n    = l.map(_ * 2).filter(_ >= j * 2)
-        lops should be(n)
-
-      test(s"withFilterForeach list of $i size and $j filter"):
-        val l    = (0 until i).toList
-        var sum1 = 0
-        ListOps.withFilterForeach[Int, Unit](l, _ >= j, sum1 += _)
-        var sum2 = 0
-        l.withFilter(_ >= j).foreach(sum2 += _)
-        sum1 should be(sum2)
-
-      test(s"filterForall list of $i size and $j filter"):
-        val l = (0 until i).toList
-        ListOps.filterForall[Int](l, _ >= j, _ >= j) should be(true)
-        ListOps.filterForall[Int](l, _ >= j, _ < 0) should be(!l.exists(_ >= j))
-
-      test(s"mapFind list of $i size and $j find"):
-        val l        = (0 until i).toList
-        val expected = if i == 0 || j >= i then None else Some(j * 2)
-        ListOps.mapFind(l, _ * 2, _ == j * 2) should be(expected)
+  override def createIterable(i: Int): List[Int] = (0 until i).toList
