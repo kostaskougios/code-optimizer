@@ -56,4 +56,15 @@ object IterableOps:
           notYetOptimized(x, "mapFind")
         s.map(mapper).find(pred)
 
-  def mapPartition[A, B](list: Iterable[A], mapper: A => B, partitionPred: B => Boolean): (Iterable[B], Iterable[B]) = ???
+  def mapPartition[A, B](s: Iterable[A], mapper: A => B, partitionPred: B => Boolean): (Iterable[B], Iterable[B]) =
+    s match
+      case s: Seq[A] => SeqOps.mapPartition(s, mapper, partitionPred)
+      case _         =>
+        val l  = List.newBuilder[B]
+        val r  = List.newBuilder[B]
+        val it = s.iterator
+        while it.hasNext do
+          val h = mapper(it.next())
+          if partitionPred(h) then l += h
+          else r += h
+        (l.result(), r.result())

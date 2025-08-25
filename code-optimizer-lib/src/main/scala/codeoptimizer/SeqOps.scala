@@ -54,8 +54,16 @@ object SeqOps:
         ListOps.mapFind(l, mapper, pred)
       case x          =>
         if mapFindNotOptimized then
-          mapFindNotOptimized = true
+          mapFindNotOptimized = false
           notYetOptimized(x, "mapFind")
         s.map(mapper).find(pred)
 
-  def mapPartition[A, B](list: Seq[A], mapper: A => B, partitionPred: B => Boolean): (Seq[B], Seq[B]) = ???
+  private var mapPartitionNotOptimized                                                             = true
+  def mapPartition[A, B](s: Seq[A], mapper: A => B, partitionPred: B => Boolean): (Seq[B], Seq[B]) =
+    s match
+      case l: List[A] => ListOps.mapPartition(l, mapper, partitionPred)
+      case x          =>
+        if mapPartitionNotOptimized then
+          mapPartitionNotOptimized = false
+          notYetOptimized(x, "mapPartition")
+        s.map(mapper).partition(partitionPred)
