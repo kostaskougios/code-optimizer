@@ -35,3 +35,11 @@ object IterableBenchmarks:
       r = iterableSmall.map(_ * 2).filter(_ >= 2)
       i += 1
     r
+
+  def runMapPartitionSmall(): (Iterable[Int], Iterable[Int]) =
+    var i = 0
+    var r = (Iterable.empty[Int], Iterable.empty[Int])
+    while i < 300000 do
+      r = iterableSmall.map(_ * 2).partition(_ > 500)
+      i += 1
+    r
