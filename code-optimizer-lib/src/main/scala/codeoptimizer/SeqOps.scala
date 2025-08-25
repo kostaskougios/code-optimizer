@@ -57,3 +57,5 @@ object SeqOps:
           mapFindNotOptimized = true
           notYetOptimized(x, "mapFind")
         s.map(mapper).find(pred)
+
+  def mapPartition[A, B](list: Seq[A], mapper: A => B, partitionPred: B => Boolean): (Seq[B], Seq[B]) = ???

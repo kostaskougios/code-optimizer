@@ -55,3 +55,5 @@ object IterableOps:
           mapFindNotOptimized = true
           notYetOptimized(x, "mapFind")
         s.map(mapper).find(pred)
+
+  def mapPartition[A, B](list: Iterable[A], mapper: A => B, partitionPred: B => Boolean): (Iterable[B], Iterable[B]) = ???

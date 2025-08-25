@@ -9,6 +9,8 @@ class IterableOpsTest extends AbstractIterableTest[Iterable[Int]]("Iterable"):
   override def withFilterForeach(l: Iterable[Int], pred: Int => Boolean, f: Int => Unit): Unit = IterableOps.withFilterForeach(l, pred, f)
   override def filterForall(l: Iterable[Int], pred: Int => Boolean, all: Int => Boolean)       = IterableOps.filterForall(l, pred, all)
   override def mapFind(l: Iterable[Int], mapper: Int => Int, pred: Int => Boolean)             = IterableOps.mapFind(l, mapper, pred)
+  override def mapPartition(l: Iterable[Int], mapper: Int => Int, pred: Int => Boolean): (Iterable[Int], Iterable[Int]) =
+    IterableOps.mapPartition(l, mapper, pred)
 
   override def createIterable(i: Int): Iterable[Int] = (0 until i).map(j => j -> j).toMap.values // make sure we get an iterable and not a seq
 

@@ -1,4 +1,5 @@
 package codeoptimizer
+import scala.collection.mutable
 
 object ListOps:
   def filterMap[A, B](l: List[A], pred: A => Boolean, mapper: A => B): List[B] =
@@ -51,3 +52,22 @@ object ListOps:
         if pred(h) then return Some(h)
         these = these.tail
       None
+
+  private val TupleOfNil = (Nil, Nil)
+
+  def mapPartition[A, B](list: List[A], mapper: A => B, partitionPred: B => Boolean): (List[B], List[B]) =
+    if list.isEmpty then TupleOfNil
+    else
+      var l: mutable.Builder[B, List[B]] = null
+      var r: mutable.Builder[B, List[B]] = null
+      var these                          = list
+      while !these.isEmpty do
+        val h = mapper(these.head)
+        if partitionPred(h) then
+          if l == null then l = List.newBuilder
+          l += h
+        else
+          if r == null then r = List.newBuilder
+          r += h
+        these = these.tail
+      if l == null then (Nil, r.result()) else if r == null then (l.result(), Nil) else (l.result(), r.result())

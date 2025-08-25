@@ -8,10 +8,11 @@ abstract class AbstractIterableTest[C <: IterableOnce[Int]](iterableName: String
   def withFilterForeach(l: C, pred: Int => Boolean, f: Int => Unit): Unit
   def filterForall(l: C, pred: Int => Boolean, all: Int => Boolean): Boolean
   def mapFind(l: C, mapper: Int => Int, pred: Int => Boolean): Option[Int]
+  def mapPartition(l: C, mapper: Int => Int, pred: Int => Boolean): (C, C)
   def createIterable(i: Int): C
 
   for i <- 0 to 10 do
-    for j <- 0 to i + 1 do
+    for j <- -1 to i + 1 do
       test(s"filterMap $iterableName of $i size and $j filter"):
         val l    = createIterable(i)
         val lops = filterMap(l, _ >= j, _ * 2)
@@ -39,5 +40,12 @@ abstract class AbstractIterableTest[C <: IterableOnce[Int]](iterableName: String
 
       test(s"mapFind $iterableName of $i size and $j find"):
         val l        = createIterable(i)
-        val expected = if i == 0 || j >= i then None else Some(j * 2)
+        val expected = if i == 0 || j >= i || j < 0 then None else Some(j * 2)
         mapFind(l, _ * 2, _ == j * 2) should be(expected)
+
+      test(s"mapPartition $iterableName of $i size and $j find"):
+        val l        = createIterable(i)
+        val (el, er) = l.iterator
+          .map(_ * 2)
+          .partition(_ <= j * 2)
+        mapPartition(l, _ * 2, _ <= j * 2) should be((el.toList, er.toList))
