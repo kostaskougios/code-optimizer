@@ -143,3 +143,11 @@ object ListsBenchmark:
       r = largeList.map(_ * 2).partition(_ > 500)
       i += 1
     r
+
+  def runMapPartitionSmall(): (List[Int], List[Int]) =
+    var i = 0
+    var r = (List.empty[Int], List.empty[Int])
+    while i < 300000 do
+      r = smallList.map(_ * 2).partition(_ > 500)
+      i += 1
+    r
